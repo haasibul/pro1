@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hasibul — IBM Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+--bg:#f7f5f0;
+--bg2:#eeeae2;
+--bg3:#e4dfd5;
+--ink:#0e0d0b;
+--ink2:#1c1a16;
+--ink3:#2e2b25;
+--muted:#7a7060;
+--muted2:#b0a898;
+--accent:#c84b2f;
+--accent2:#e06040;
+--accent3:rgba(200,75,47,.1);
+--accent4:rgba(200,75,47,.06);
+--green:#2d6a4f;
+--green2:rgba(45,106,79,.1);
+--mono:'Space Mono',monospace;
+--sans:'Sora',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);overflow-x:hidden;}
+
+
+
+/* ── HERO (SPLIT LAYOUT) ── */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;}
+
+.hero-left{background:var(--ink);padding:80px 60px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.hero-left::before{content:'';position:absolute;top:-200px;left:-200px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,75,47,.12),transparent 70%);pointer-events:none;}
+
+.h-meta{position:relative;z-index:2;}
+.h-id-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.08em;margin-bottom:56px;}
+.h-id-tag::before{content:'';width:24px;height:1px;background:var(--accent);}
+
+.h-firstname{font-size:clamp(64px,9vw,110px);font-weight:700;line-height:.9;letter-spacing:-.04em;color:#fff;display:block;}
+.h-lastname{font-size:clamp(18px,2.5vw,28px);font-weight:200;color:var(--muted2);letter-spacing:.06em;margin-top:12px;display:block;}
+
+.h-ibm-pill{display:inline-flex;align-items:center;gap:10px;margin-top:48px;border:1px solid rgba(200,75,47,.4);border-radius:4px;padding:10px 18px;font-family:var(--mono);font-size:10px;color:var(--accent2);letter-spacing:.1em;width:fit-content;}
+.h-ibm-pill span{width:5px;height:5px;background:var(--accent);border-radius:50%;animation:blink 1.8s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.h-bottom{position:relative;z-index:2;}
+.h-scroll{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.2em;display:flex;align-items:center;gap:12px;}
+.h-scroll::after{content:'';width:48px;height:1px;background:var(--muted);display:inline-block;animation:scrollline 2s ease-in-out infinite;}
+@keyframes scrollline{0%,100%{width:48px;opacity:.4;}50%{width:72px;opacity:.9;}}
+
+.hero-right{background:var(--bg2);padding:80px 60px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.hero-right::after{content:'01';position:absolute;right:-20px;bottom:-40px;font-size:220px;font-weight:700;color:var(--bg3);line-height:1;letter-spacing:-.05em;font-family:var(--mono);pointer-events:none;user-select:none;}
+
+.h-principle-intro{position:relative;z-index:2;}
+.h-pi-label{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:20px;}
+.h-pi-text{font-size:clamp(17px,2vw,22px);font-weight:300;line-height:1.7;color:var(--ink2);margin-bottom:40px;}
+.h-pi-text strong{font-weight:600;color:var(--accent);}
+
+.h-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bg3);border:1px solid var(--bg3);margin-top:8px;}
+.hstat{background:var(--bg2);padding:20px;transition:background .2s;}
+.hstat:hover{background:var(--bg);}
+.hstat-n{font-size:36px;font-weight:700;font-family:var(--mono);color:var(--ink);line-height:1;margin-bottom:4px;}
+.hstat-l{font-size:11px;color:var(--muted);font-family:var(--mono);}
+
+.hero-nav{position:absolute;bottom:0;left:0;right:0;display:flex;z-index:10;}
+.hnav-btn{flex:1;padding:18px 24px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-decoration:none;text-align:center;text-transform:uppercase;transition:all .22s ease;}
+.hnav-btn.dark{background:var(--accent);color:#fff;}
+.hnav-btn.dark:hover{background:var(--accent2);}
+.hnav-btn.light{background:var(--bg3);color:var(--ink);}
+.hnav-btn.light:hover{background:var(--ink);color:#fff;}
+
+@media(max-width:768px){
+#hero{grid-template-columns:1fr;}
+.hero-right{display:none;}
+.hero-left{min-height:100vh;}
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--bg3);border-bottom:1px solid var(--bg3);background:var(--ink);padding:14px 0;}
+.marquee-track{display:flex;gap:0;white-space:nowrap;animation:marquee 28s linear infinite;}
+.marquee-item{font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.1em;padding:0 32px;display:flex;align-items:center;gap:16px;}
+.marquee-item::after{content:'·';color:var(--accent);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── ABOUT ── */
+.about{max-width:1200px;margin:0 auto;padding:120px 60px;display:grid;grid-template-columns:2fr 1fr;gap:80px;align-items:start;}
+.about-label{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.about-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+.about-big{font-size:clamp(30px,4vw,48px);font-weight:300;line-height:1.15;margin-bottom:28px;color:var(--ink);}
+.about-big strong{font-weight:700;}
+.about-body{font-size:15px;line-height:1.9;color:var(--muted);max-width:540px;}
+.about-right{padding-top:16px;}
+.skills-title{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
+.skill-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bg3);font-size:13px;}
+.skill-name{color:var(--ink);font-weight:400;}
+.skill-bar{width:80px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.skill-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s ease;}
+
+/* ── DIVIDER ── */
+.rule{height:1px;background:var(--bg3);max-width:100%;}
+.rule-full{height:1px;background:var(--bg3);}
+
+/* ── SECTION HEADER ── */
+.sec-wrap{max-width:1200px;margin:0 auto;padding:100px 60px 60px;}
+.sec-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px;gap:40px;}
+.sec-left{}
+.sec-num{font-family:var(--mono);font-size:clamp(90px,14vw,160px);font-weight:700;line-height:.85;color:var(--bg2);letter-spacing:-.05em;margin-bottom:-20px;user-select:none;}
+.sec-num.dark-num{color:var(--ink2);}
+.sec-course{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;}
+.sec-course.trade{color:var(--accent);}
+.sec-course.mgmt{color:var(--green);}
+.sec-title{font-size:clamp(26px,3.5vw,40px);font-weight:300;line-height:1.2;color:var(--ink);}
+.sec-right{flex-shrink:0;}
+.sec-desc{font-size:14px;color:var(--muted);max-width:260px;line-height:1.7;text-align:right;}
+
+/* ── PROJECT LIST (not grid — list style, different) ── */
+.plist{display:flex;flex-direction:column;gap:0;}
+.pitem{display:grid;grid-template-columns:80px 1fr auto;align-items:start;gap:40px;padding:44px 0;border-bottom:1px solid var(--bg3);text-decoration:none;color:inherit;position:relative;transition:background .2s;}
+.pitem::before{content:'';position:absolute;left:-60px;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:bottom;transition:transform .35s cubic-bezier(.25,.8,.25,1);}
+.pitem.mgmt-item::before{background:var(--green);}
+.pitem:hover::before{transform:scaleY(1);}
+.pi-num{font-family:var(--mono);font-size:11px;color:var(--muted2);padding-top:6px;letter-spacing:.04em;}
+.pi-body{}
+.pi-icon{font-size:24px;margin-bottom:16px;display:block;}
+.pi-title{font-size:clamp(18px,2vw,22px);font-weight:600;line-height:1.2;margin-bottom:14px;transition:color .2s;}
+.pitem:hover .pi-title{color:var(--accent);}
+.pitem.mgmt-item:hover .pi-title{color:var(--green);}
+.pi-concept{font-size:14px;color:var(--muted);line-height:1.85;max-width:580px;margin-bottom:20px;}
+.pi-learned{background:var(--accent3);border-left:2px solid var(--accent);padding:12px 16px;font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:20px;max-width:580px;}
+.pitem.mgmt-item .pi-learned{background:var(--green2);border-left-color:var(--green);}
+.pi-learned strong{font-weight:600;display:block;margin-bottom:4px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);}
+.pitem.mgmt-item .pi-learned strong{color:var(--green);}
+.pi-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.pi-tag{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--bg3);color:var(--muted);border-radius:2px;}
+.pi-cta{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:6px;min-width:48px;}
+.pi-arrow{width:40px;height:40px;border:1px solid var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--muted);}
+.pitem:hover .pi-arrow{border-color:var(--accent);color:var(--accent);transform:rotate(45deg);}
+.pitem.mgmt-item:hover .pi-arrow{border-color:var(--green);color:var(--green);}
+.pi-cta-label{font-family:var(--mono);font-size:8px;letter-spacing:.15em;color:var(--muted2);text-transform:uppercase;writing-mode:vertical-lr;}
+
+/* ── DARK SECTION (management) ── */
+.dark-section{background:var(--ink);color:#fff;}
+.dark-section .sec-title{color:#fff;}
+.dark-section .pitem{border-bottom-color:rgba(255,255,255,.08);}
+.dark-section .pi-concept{color:rgba(255,255,255,.5);}
+.dark-section .pi-title{color:#fff;}
+.dark-section .pitem:hover .pi-title{color:var(--green2-text, #6ee7b7);}
+.dark-section .pitem.mgmt-item:hover .pi-title{color:#6ee7b7;}
+.dark-section .pi-tag{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);}
+.dark-section .pi-cta-label{color:rgba(255,255,255,.3);}
+.dark-section .pi-arrow{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.3);}
+.dark-section .pitem.mgmt-item:hover .pi-arrow{border-color:#6ee7b7;color:#6ee7b7;}
+.dark-section .pi-num{color:rgba(255,255,255,.2);}
+.dark-section .sec-num{color:rgba(255,255,255,.04);}
+.dark-section .pi-learned{background:rgba(45,106,79,.2);border-left-color:#6ee7b7;}
+.dark-section .pi-learned strong{color:#6ee7b7;}
+.dark-section .pi-concept{color:rgba(255,255,255,.55);}
+.dark-section .about-label::before{background:#6ee7b7;}
+.dark-section .sec-desc{color:rgba(255,255,255,.4);}
+.dark-section .sec-course.mgmt{color:#6ee7b7;}
+.dark-section .pitem::before{background:var(--green);}
+.dark-section .rule-full{background:rgba(255,255,255,.08);}
+
+/* ── PRINCIPLE SECTION ── */
+.principle-sec{background:var(--accent);padding:100px 60px;text-align:center;position:relative;overflow:hidden;}
+.principle-sec::before{content:'"';font-size:400px;font-weight:700;color:rgba(255,255,255,.06);position:absolute;top:-80px;left:50%;transform:translateX(-50%);line-height:1;font-family:var(--sans);pointer-events:none;}
+.p-inner{max-width:760px;margin:0 auto;position:relative;z-index:2;}
+.p-top{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:28px;}
+.p-text{font-size:clamp(20px,3vw,32px);font-weight:300;line-height:1.6;color:#fff;}
+.p-text strong{font-weight:700;}
+.p-attribution{margin-top:32px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.08em;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink2);color:#fff;padding:80px 60px;}
+.f-inner{max-width:1200px;margin:0 auto;}
+.f-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:60px;padding-bottom:60px;border-bottom:1px solid rgba(255,255,255,.08);}
+.f-name-big{font-size:48px;font-weight:700;line-height:1;margin-bottom:8px;}
+.f-name-big span{color:var(--accent);}
+.f-id{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.08em;margin-bottom:4px;}
+.f-program{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;}
+.f-col-title{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:20px;}
+.f-link{display:block;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;padding:6px 0;transition:color .2s;border-bottom:1px solid rgba(255,255,255,.05);}
+.f-link:hover{color:#fff;}
+.f-bottom{padding-top:40px;display:flex;justify-content:space-between;align-items:center;}
+.f-copy{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.2);}
+.f-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;display:inline-block;}
+
+@media(max-width:760px){
+.about{grid-template-columns:1fr;padding:60px 24px;}
+.sec-wrap{padding:60px 24px;}
+.pitem{grid-template-columns:1fr;gap:16px;padding-left:20px;}
+.pi-cta{flex-direction:row;}
+.pi-cta-label{writing-mode:horizontal-tb;}
+.principle-sec{padding:60px 24px;}
+footer{padding:60px 24px;}
+.f-top{grid-template-columns:1fr;gap:40px;}
+.f-bottom{flex-direction:column;gap:16px;}
+.sec-top{flex-direction:column;align-items:flex-start;}
+.sec-desc{text-align:left;}
+.pitem::before{left:-24px;}
+.hero-left{padding:60px 32px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO SPLIT ── -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="h-meta">
+      <div class="h-id-tag">2417839 · IBM · 2026</div>
+      <span class="h-firstname">Hasibul</span>
+      <span class="h-lastname">Integrated Business Management</span>
+      <div class="h-ibm-pill"><span></span>ACADEMIC PORTFOLIO</div>
+    </div>
+    <div class="h-bottom">
+      <div class="h-scroll">SCROLL TO EXPLORE</div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="h-principle-intro">
+      <div class="h-pi-label">What this portfolio is about</div>
+      <p class="h-pi-text">
+        This is not a collection of submitted files.<br>
+        It is proof that I could <strong>explain, apply, and connect</strong> the ideas behind every concept — clearly enough for anyone to understand, even without taking these courses.
+      </p>
+      <div class="h-stats">
+        <div class="hstat"><div class="hstat-n" data-t="10">0</div><div class="hstat-l">PROJECTS</div></div>
+        <div class="hstat"><div class="hstat-n" data-t="2">0</div><div class="hstat-l">COURSES</div></div>
+        <div class="hstat"><div class="hstat-n" data-t="5">0</div><div class="hstat-l">TRADE MODELS</div></div>
+        <div class="hstat"><div class="hstat-n" data-t="5">0</div><div class="hstat-l">OPT. METHODS</div></div>
+      </div>
+    </div>
+    <nav class="hero-nav">
+      <a href="#trade" class="hnav-btn dark">→ International Trade</a>
+      <a href="#management" class="hnav-btn light">→ Management Science</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Gravity Model</span>
+    <span class="marquee-item">Comparative Advantage</span>
+    <span class="marquee-item">Factor Endowments</span>
+    <span class="marquee-item">Economies of Scale</span>
+    <span class="marquee-item">Autarky</span>
+    <span class="marquee-item">Binary Optimization</span>
+    <span class="marquee-item">Simplex Method</span>
+    <span class="marquee-item">Branch & Bound</span>
+    <span class="marquee-item">Travelling Salesman</span>
+    <span class="marquee-item">Workforce Planning</span>
+    <span class="marquee-item">Gravity Model</span>
+    <span class="marquee-item">Comparative Advantage</span>
+    <span class="marquee-item">Factor Endowments</span>
+    <span class="marquee-item">Economies of Scale</span>
+    <span class="marquee-item">Autarky</span>
+    <span class="marquee-item">Binary Optimization</span>
+    <span class="marquee-item">Simplex Method</span>
+    <span class="marquee-item">Branch & Bound</span>
+    <span class="marquee-item">Travelling Salesman</span>
+    <span class="marquee-item">Workforce Planning</span>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section class="about" id="about">
+  <div>
+    <div class="about-label">About this portfolio</div>
+    <h2 class="about-big">A semester of<br>learning — not<br><strong>submitting.</strong></h2>
+    <p class="about-body">My name is Hasibul. I study Integrated Business Management, and this portfolio exists for one reason: to prove I didn't just complete assignments — I understood the ideas inside them. Every page linked here explains a real concept clearly enough that someone who never took these courses could walk away understanding it.</p>
+  </div>
+  <div class="about-right">
+    <div class="skills-title">Concepts covered</div>
+    <div class="skill-row"><span class="skill-name">Trade Theory</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Mathematical Optimization</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Systems Thinking</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Resource Allocation</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Decision Modeling</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+  </div>
+</section>
+
+<!-- ── PRINCIPLE ── -->
+<div class="principle-sec">
+  <div class="p-inner">
+    <div class="p-top">Guiding Principle</div>
+    <p class="p-text">
+      "Understanding begins where memorization ends — true learning is the ability to <strong>explain</strong>, <strong>apply</strong>, and <strong>connect ideas</strong> across the boundaries of any single course."
+    </p>
+    <div class="p-attribution">The lens through which every project in this portfolio was approached.</div>
+  </div>
+</div>
+
+<!-- ── INTERNATIONAL TRADE ── -->
+<section class="sec-wrap" id="trade">
+  <div class="sec-top">
+    <div class="sec-left">
+      <div class="sec-num">01</div>
+      <div class="sec-course trade">International Trade</div>
+      <h2 class="sec-title">Why do nations trade?<br>Five frameworks, five answers.</h2>
+    </div>
+    <div class="sec-right">
+      <p class="sec-desc">From Newton's physics repurposed for economics, to the quiet cost of closing a border — these projects explain the forces that shape global commerce.</p>
+    </div>
+  </div>
+
+  <div class="plist">
+
+    <a class="pitem" href="gravity-model.html">
+      <div class="pi-num">01 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">🌍</span>
+        <h3 class="pi-title">The Gravity Model of Trade</h3>
+        <p class="pi-concept">Physicists use gravity to describe attraction between masses. Economists borrowed the same mathematics: trade between two countries is proportional to the product of their economic sizes and inversely proportional to the distance between them. A large economy close to another large economy trades a lot. A small economy far from everyone trades a little. This model, surprisingly simple, predicts real-world trade flows with remarkable accuracy.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Distance is not just physical — it includes language barriers, legal differences, and cultural distance. Understanding this helped me see why a small country joining a trade bloc can punch far above its economic weight.</div>
+        <div class="pi-tags"><span class="pi-tag">GDP × GDP / Distance²</span><span class="pi-tag">Bilateral Trade</span><span class="pi-tag">Trade Barriers</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem" href="ricardex.html">
+      <div class="pi-num">02 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">⚖️</span>
+        <h3 class="pi-title">Ricardex — Comparative Advantage</h3>
+        <p class="pi-concept">David Ricardo proved something that still feels strange: even if Portugal is better at making both wine and cloth than England, both countries are better off if Portugal focuses on wine and England on cloth — as long as each specializes in what it gives up less to produce. The concept is comparative advantage, and it turns the intuition that "only the best should produce" completely on its head.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Absolute productivity is less important than relative opportunity cost. Two students in a group project should split tasks by what each gives up least — the same logic drives $25 trillion in annual global trade.</div>
+        <div class="pi-tags"><span class="pi-tag">Opportunity Cost</span><span class="pi-tag">Specialization</span><span class="pi-tag">Mutual Gain</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem" href="resource-abundance.html">
+      <div class="pi-num">03 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">🏔️</span>
+        <h3 class="pi-title">Resource Abundance & Trade Patterns</h3>
+        <p class="pi-concept">Heckscher and Ohlin extended Ricardo's logic: countries don't just differ in productivity, they differ in what they have plenty of. A country rich in labour exports things that need a lot of labour. A country with abundant capital exports capital-intensive goods. This explains why Bangladesh exports garments and Germany exports machinery — not because one is "better," but because each has a different endowment.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Factor endowments aren't fixed forever — education, infrastructure, and capital accumulation change them. Today's labour-intensive exporter can become tomorrow's technology exporter through deliberate investment.</div>
+        <div class="pi-tags"><span class="pi-tag">H-O Theorem</span><span class="pi-tag">Labour vs Capital</span><span class="pi-tag">Export Composition</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem" href="economies-scale.html">
+      <div class="pi-num">04 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">📐</span>
+        <h3 class="pi-title">Systems Thinking & Economies of Scale</h3>
+        <p class="pi-concept">When you produce more, the cost per unit falls. Not just a little — sometimes dramatically. This changes everything about where production happens and why. Systems thinking reveals that these effects don't operate in isolation: lower costs attract more buyers, more buyers mean more volume, more volume means lower costs again. These feedback loops explain why certain industries cluster in a handful of countries and refuse to move.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Trade isn't only about endowments or productivity differences. Sometimes two identical countries trade with each other simply because scale matters. Getting big enough can itself become the competitive advantage.</div>
+        <div class="pi-tags"><span class="pi-tag">Increasing Returns</span><span class="pi-tag">Feedback Loops</span><span class="pi-tag">Industrial Clustering</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem" href="autarky-trap.html">
+      <div class="pi-num">05 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">🔐</span>
+        <h3 class="pi-title">The Autarky Trap</h3>
+        <p class="pi-concept">Autarky means producing everything yourself and trading with nobody. It sounds like independence. In economic terms, it is a trap. When a country refuses to import, it must produce goods it is bad at making — paying higher costs and forgoing the consumption gains that specialization allows. This project maps that loss precisely and asks: how much does the security of self-sufficiency actually cost?</p>
+        <div class="pi-learned"><strong>What I learned</strong>No modern economy is fully autarkic, but policy choices — tariffs, quotas, export bans — push countries along a spectrum. Every step toward autarky has a welfare cost that is calculable, even if rarely communicated to voters.</div>
+        <div class="pi-tags"><span class="pi-tag">Welfare Loss</span><span class="pi-tag">Deadweight Cost</span><span class="pi-tag">Trade Policy</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── MANAGEMENT SCIENCE (DARK) ── -->
+<section class="dark-section" id="management">
+<div class="sec-wrap">
+  <div class="sec-top">
+    <div class="sec-left">
+      <div class="sec-num">02</div>
+      <div class="sec-course mgmt">Management Science</div>
+      <h2 class="sec-title">How do we make<br>better decisions?<br>Five methods.</h2>
+    </div>
+    <div class="sec-right">
+      <p class="sec-desc">Allocation problems, optimization algorithms, and routes no human could calculate by hand — translated into plain English.</p>
+    </div>
+  </div>
+
+  <div class="plist">
+
+    <a class="pitem mgmt-item" href="binary-optimizer.html">
+      <div class="pi-num">01 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">⚡</span>
+        <h3 class="pi-title">Binary Decision Optimizer</h3>
+        <p class="pi-concept">Some decisions cannot be "sort of yes." You either open the factory or you don't. You either hire the contractor or you don't. Binary integer programming handles exactly this: decision variables that can only be 0 or 1. The challenge is that with many binary variables, the number of possible combinations explodes — but the algorithm finds the profit-maximizing or cost-minimizing combination within your constraints.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Rounding a continuous LP solution to the nearest integer often gives the wrong answer — and not just slightly wrong. The proper 0-1 formulation exists because rounding shortcuts can violate constraints or miss significantly better solutions.</div>
+        <div class="pi-tags"><span class="pi-tag">0-1 Variables</span><span class="pi-tag">Integer Programming</span><span class="pi-tag">Combinatorial Choice</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem mgmt-item" href="lp-solver.html">
+      <div class="pi-num">02 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">📏</span>
+        <h3 class="pi-title">LP Solver</h3>
+        <p class="pi-concept">A business has limited machines, limited workers, limited time. Linear programming translates those limitations into lines on a graph. The area where all constraints are satisfied is called the feasible region. The best possible outcome always sits at a corner of that region. The simplex algorithm visits corners efficiently until it finds the one that maximizes profit or minimizes cost — that corner is the optimal solution.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Formulating the problem is harder than solving it. Identifying which constraints are binding, which variables matter, and what the objective function actually represents — that is the real managerial skill. The algorithm is just arithmetic.</div>
+        <div class="pi-tags"><span class="pi-tag">Simplex Algorithm</span><span class="pi-tag">Corner-point Theorem</span><span class="pi-tag">Binding Constraints</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem mgmt-item" href="branch-bound.html">
+      <div class="pi-num">03 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">🌳</span>
+        <h3 class="pi-title">Branch and Bound</h3>
+        <p class="pi-concept">The LP solver gives you 3.7 machines. Real life gives you 3 or 4. Branch and bound closes that gap: it solves the LP, sees the fractional answer, then branches into two sub-problems — one where that variable is forced down to the nearest integer, one where it is forced up. Each branch is bounded by the best LP solution it could possibly achieve. Branches that can't beat the best integer solution found so far are pruned. The result is the true integer optimum.</p>
+        <div class="pi-learned"><strong>What I learned</strong>The elegance of branch and bound is that it avoids checking every possible integer combination. Smart bounding eliminates entire subtrees of the decision space, making an exponential problem practically solvable.</div>
+        <div class="pi-tags"><span class="pi-tag">LP Relaxation</span><span class="pi-tag">Tree Pruning</span><span class="pi-tag">Integer Optimality</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem mgmt-item" href="tsp.html">
+      <div class="pi-num">04 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">🗺️</span>
+        <h3 class="pi-title">Travelling Salesman Problem</h3>
+        <p class="pi-concept">A salesman must visit 10 cities exactly once and return home. How many possible routes are there? 181,440. With 20 cities: 60 quadrillion. The Travelling Salesman Problem is famously NP-hard, meaning no algorithm can guarantee the best solution in reasonable time as the number of cities grows. This project explores why, and what heuristic approaches — nearest neighbour, 2-opt improvements — allow us to find very good solutions without checking every route.</p>
+        <div class="pi-learned"><strong>What I learned</strong>Perfect is the enemy of good. In combinatorial problems, an algorithm that finds a 98%-optimal solution in seconds is often worth far more than one that finds 100%-optimal in days. Knowing when to use heuristics versus exact methods is itself a decision-making skill.</div>
+        <div class="pi-tags"><span class="pi-tag">NP-Hard Complexity</span><span class="pi-tag">Nearest Neighbour</span><span class="pi-tag">2-Opt Heuristic</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+    <a class="pitem mgmt-item" href="wp.html">
+      <div class="pi-num">05 / 05</div>
+      <div class="pi-body">
+        <span class="pi-icon">👷</span>
+        <h3 class="pi-title">Workforce Planning</h3>
+        <p class="pi-concept">A hospital needs 20 nurses on Monday mornings and 8 on Sunday nights. Each nurse works five consecutive days. How many nurses should be hired and when should each start their rotation? Workforce planning formulates this as a linear program: minimize total staff cost while satisfying coverage requirements at every time period. The solution tells you exactly how many people to hire and when — not based on intuition, but on mathematics.</p>
+        <div class="pi-learned"><strong>What I learned</strong>The hardest part is writing the coverage constraints correctly. A common mistake is constraining total hours rather than simultaneous presence. Getting the formulation right is everything — once correct, the solver does the rest in milliseconds.</div>
+        <div class="pi-tags"><span class="pi-tag">Coverage Constraints</span><span class="pi-tag">Cyclic Scheduling</span><span class="pi-tag">Cost Minimization</span></div>
+      </div>
+      <div class="pi-cta">
+        <div class="pi-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 13L13 3M13 3H7M13 3V9"/></svg></div>
+        <span class="pi-cta-label">View</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="f-inner">
+    <div class="f-top">
+      <div>
+        <div class="f-name-big">Has<span>i</span>bul</div>
+        <div class="f-id">ID: 2417839</div>
+        <div class="f-program">Integrated Business Management · 2026</div>
+      </div>
+      <div>
+        <div class="f-col-title">International Trade</div>
+        <a class="f-link" href="gravity-model.html">Gravity Model of Trade</a>
+        <a class="f-link" href="ricardex.html">Ricardex — Comparative Advantage</a>
+        <a class="f-link" href="resource-abundance.html">Resource Abundance</a>
+        <a class="f-link" href="economies-scale.html">Economies of Scale</a>
+        <a class="f-link" href="autarky-trap.html">The Autarky Trap</a>
+      </div>
+      <div>
+        <div class="f-col-title">Management Science</div>
+        <a class="f-link" href="binary-optimizer.html">Binary Decision Optimizer</a>
+        <a class="f-link" href="lp-solver.html">LP Solver</a>
+        <a class="f-link" href="branch-bound.html">Branch and Bound</a>
+        <a class="f-link" href="tsp.html">Travelling Salesman Problem</a>
+        <a class="f-link" href="wp.html">Workforce Planning</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span class="f-copy">© 2026 Hasibul · Academic Portfolio · Integrated Business Management</span>
+      <span class="f-dot"></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+/* COUNTERS */
+document.querySelectorAll('[data-t]').forEach(el=>{
+  const ob=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting)return;
+    const t=+el.dataset.t;let v=0;
+    const iv=setInterval(()=>{v=Math.min(v+t/30,t);el.textContent=Math.round(v);if(v>=t)clearInterval(iv);},25);
+    ob.unobserve(el);
+  },{threshold:.5});
+  ob.observe(el);
+});
+
+/* SKILL BARS */
+document.querySelectorAll('.skill-fill').forEach(el=>{
+  const w=el.style.width;el.style.width='0';
+  const ob=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting)return;
+    setTimeout(()=>el.style.width=w,100);
+    ob.unobserve(el);
+  },{threshold:.5});
+  ob.observe(el);
+});
+
+/* SCROLL REVEAL */
+const revItems=[...document.querySelectorAll('.pitem,.hstat,.about>div,.pi-learned')];
+revItems.forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition=`opacity .55s ease ${i*.04}s,transform .55s ease ${i*.04}s`;
+});
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:.08}).observe=((obs)=>{revItems.forEach(el=>obs.observe(el));return obs;})(new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} 
+  });
+},{threshold:.08}));
+
+/* simpler reveal */
+const items=document.querySelectorAll('.pitem,.hstat,.about>div');
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:.07});
+items.forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition=`opacity .5s ease ${(i%5)*.07}s,transform .5s ease ${(i%5)*.07}s`;io.observe(el);});
+</script>
+</body>
+</html>
+
