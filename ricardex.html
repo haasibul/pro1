@@ -1,1 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RICARDEX — Trade Advantage Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   ROOT VARIABLES & RESET — NORDIC MINERAL THEME
+══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --bg: #f8fbfd;          /* Clean Mineral White Backdrop */
+  --surface: #ffffff;
+  --surface2: #f1f4f8;    /* Muted Slate Gray */
+  --surface3: #e2e8f0;    /* Darker Accent Gray */
+  --border: #e1e7ef;      /* Soft Line Separators */
+  --border2: #cbd5e1;
+  
+  --primary: #1c2b39;     /* Deep Nordic Navy text/headers */
+  --secondary: #64748b;   /* Midtone Slate text */
+  --text: #0f172a;        /* High-contrast charcoal text */
+  
+  --accent: #14b8a6;      /* Vibrant Corporate Teal */
+  --accent2: #0d9488;
+  --gold: #b45309;        /* Deep Amber / Gold Accent */
+  --green: #10b981;       /* Operational Success Green */
+  --red: #ef4444;         /* Error Notification Red */
+  --purple: #6366f1;      /* Assignment Meta Accent */
+  
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'Syne', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
 
+html{scroll-behavior:smooth;}
+body{
+  background-color:var(--bg);
+  color:var(--text);
+  font-family:var(--serif);
+  font-size:15px;
+  line-height:1.75;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Base grid element watermark replacement background decoration */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(20,184,166,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.02) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0;
+}
+.wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:0 1.5rem 6rem;}
+
+/* ── Progress Bar ── */
+#pbar{
+  position:fixed;top:0;left:0;height:4px;width:0%;
+  background:linear-gradient(90deg, var(--accent), #38bdf8);
+  z-index:9999;transition:width 0.1s linear;
+}
+
+/* ══════════════════════════════════════════
+   HEADER & NAVIGATION
+══════════════════════════════════════════ */
+header{padding:4rem 0 2rem;text-align:center;position:relative;}
+.header-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);
+  background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.2);
+  padding:5px 16px;border-radius:100px;margin-bottom:1.4rem;
+}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+header h1{
+  font-family:var(--sans);font-size:clamp(2.8rem,6vw,4.5rem);font-weight:800;
+  letter-spacing:-0.04em;line-height:1.1;color:var(--primary);
+}
+.header-tagline{margin-top:0.5rem;font-family:var(--sans);font-size:1.05rem;color:var(--secondary);font-style:italic;}
+.header-line{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:1.5rem auto 0;}
+
+.page-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:0.5rem;margin:1.5rem 0 2.5rem;}
+.page-nav a{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--secondary);border:1px solid var(--border);border-radius:100px;
+  padding:5px 14px;text-decoration:none;transition:all 0.2s;background:var(--surface);
+}
+.page-nav a:hover{color:var(--accent);border-color:var(--accent);background:var(--surface2);}
+
+/* ══════════════════════════════════════════
+   PORTFOLIO STRUCTURAL MARKERS
+══════════════════════════════════════════ */
+.portfolio-marker{display:flex;align-items:center;gap:12px;margin:3.5rem 0 1rem;padding-bottom:0.6rem;border-bottom:2px solid var(--border);}
+.portfolio-marker-num{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--surface);background:var(--primary);padding:4px 12px;border-radius:2px;font-weight:600;
+}
+.portfolio-marker-title{font-family:var(--sans);font-size:1.35rem;font-weight:800;color:var(--primary);}
+.portfolio-marker-line{flex:1;height:1px;background:var(--border);}
+
+.section-label{display:flex;align-items:center;gap:12px;margin:2.5rem 0 1rem;}
+.section-num{
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--primary);
+  background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:3px;white-space:nowrap;
+}
+.section-title{font-family:var(--sans);font-size:1.15rem;font-weight:700;color:var(--primary);}
+.section-line{flex:1;height:1px;background:var(--border);}
+
+/* ── Base Panel Layouts ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:2.5rem;margin-bottom:1.5rem;
+  box-shadow:0 1px 3px rgba(0,0,0,0.02);
+}
+.card-header{display:flex;align-items:center;gap:12px;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.card-icon{font-size:1.4rem;line-height:1;}
+.card-title{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--primary);}
+.card-sub{font-family:var(--mono);font-size:10px;color:var(--secondary);letter-spacing:1px;}
+
+/* ══════════════════════════════════════════
+   SECTION 1: OVERVIEW PROSE
+══════════════════════════════════════════ */
+.overview-prose{font-size:0.95rem;color:var(--text);line-height:1.8;margin-bottom:1.2rem;}
+.overview-prose strong{color:var(--primary);font-weight:700;}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.2rem 0;}
+.concept-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.4rem;position:relative;overflow:hidden;}
+.concept-item::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--accent));}
+.concept-item-icon{font-size:1.6rem;margin-bottom:0.5rem;}
+.concept-item-title{font-family:var(--sans);font-size:0.95rem;font-weight:700;color:var(--primary);margin-bottom:0.3rem;}
+.concept-item-desc{font-family:var(--mono);font-size:10px;color:var(--secondary);line-height:1.6;}
+.course-badge{
+  display:inline-flex;align-items:center;gap:10px;background:rgba(99,102,241,0.05);
+  border:1px solid rgba(99,102,241,0.15);border-radius:6px;padding:0.6rem 1.2rem;margin-top:0.8rem;
+}
+.course-badge-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--purple);font-weight:600;}
+.course-badge-value{font-family:var(--sans);font-size:0.9rem;font-weight:700;color:var(--primary);}
+
+/* ══════════════════════════════════════════
+   SECTION 2: CONFIG & INTERACTIVE ENGINE
+══════════════════════════════════════════ */
+.preset-container { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.preset-title { font-family:var(--mono); font-size: 10px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+.scenario-badge{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;
+  border:1px solid var(--border);color:var(--secondary);cursor:pointer;transition:all 0.2s;background:var(--surface);
+}
+.scenario-badge:hover, .scenario-badge.active{border-color:var(--purple);color:var(--purple);background:rgba(99,102,241,0.05);}
+
+.input-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;align-items:start;}
+@media(max-width:720px){.input-grid{grid-template-columns:1fr;} .input-vs { padding-top: 0.5rem !important; margin-bottom: 0.5rem; }}
+.input-vs{display:flex;align-items:center;justify-content:center;padding-top:2.5rem;font-family:var(--sans);font-size:1.3rem;font-weight:800;color:var(--border2);}
+
+.country-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.6rem;}
+.country-block.a-side{border-top:3px solid var(--accent);}
+.country-block.b-side{border-top:3px solid var(--gold);}
+.country-name-input{
+  width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);
+  color:var(--primary);font-family:var(--sans);font-size:1.05rem;font-weight:700;
+  padding:4px 0 6px;margin-bottom:1.2rem;outline:none;transition:border-color 0.2s;
+}
+.country-name-input:focus{border-bottom-color:var(--accent);}
+.country-name-input.b:focus{border-bottom-color:var(--gold);}
+.field-row{margin-bottom:1rem;}
+.field-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--secondary);margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+.field-unit{font-size:9px;color:var(--secondary);background:var(--surface3);padding:1px 6px;border-radius:3px;}
+.num-input{
+  width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  color:var(--primary);font-family:var(--mono);font-size:1.1rem;font-weight:500;padding:10px 14px;outline:none;
+}
+.num-input:focus{border-color:var(--accent);}
+.num-input.b:focus{border-color:var(--gold);}
+.resources-row{display:flex;align-items:center;gap:10px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border2);}
+.resources-row label{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--secondary);flex-shrink:0;}
+
+/* ── Dynamic Output Dash Cards ── */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.result-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.4rem;position:relative;overflow:hidden;}
+.result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--accent));opacity:0.7;}
+.result-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--secondary);margin-bottom:0.5rem;}
+.result-card-value{font-family:var(--mono);font-size:1.45rem;font-weight:600;color:var(--primary);line-height:1;}
+
+/* ── MATRIX & SPEC LAYOUTS ── */
+.oc-matrix{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;margin:1.5rem 0;}
+.oc-matrix th{background:var(--primary);color:var(--surface);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:12px 16px;text-align:center;border:1px solid var(--primary);}
+.oc-matrix td{padding:14px 16px;border:1px solid var(--border);text-align:center;background:var(--surface);}
+.oc-matrix .country-cell{text-align:left;font-family:var(--sans);font-size:0.85rem;font-weight:700;color:var(--primary);background:var(--surface2);}
+.oc-val{font-size:1.3rem;font-weight:600;color:var(--primary);}
+.oc-formula{font-size:9px;color:var(--secondary);display:block;margin-top:3px;}
+.oc-badge{display:inline-block;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:3px;margin-top:6px;}
+.oc-badge.winner{background:rgba(16,185,129,0.08);color:var(--green);border:1px solid rgba(16,185,129,0.3);}
+.oc-badge.loser{background:var(--surface2);color:var(--secondary);border:1px solid var(--border);}
+
+.ca-result{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;}
+@media(max-width:600px){.ca-result{grid-template-columns:1fr;}}
+.ca-card{border-radius:8px;padding:1.4rem;border:1px solid var(--border);background:var(--surface2);}
+.ca-country{font-family:var(--sans);font-size:0.95rem;font-weight:700;color:var(--primary);margin-bottom:0.3rem;}
+.ca-specializes{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--secondary);margin-bottom:0.6rem;}
+.ca-good{font-family:var(--sans);font-size:1.3rem;font-weight:800;color:var(--accent2);}
+.ca-good.gold { color:var(--gold); }
+.ca-reason{font-size:0.8rem;color:var(--secondary);margin-top:0.5rem;font-style:italic;}
+
+/* ── PPF LINEAR FRONTIERS ── */
+.ppf-wrap{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;margin-top:1.5rem;}
+@media(max-width:800px){.ppf-wrap{grid-template-columns:1fr;}}
+#ppfCanvas{width:100%;height:320px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:block;}
+.ppf-controls{display:flex;flex-direction:column;gap:1rem;}
+.ppf-stat{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1.2rem;}
+.ppf-stat-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--secondary);margin-bottom:0.8rem;}
+.ppf-stat-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;margin-bottom:0.5rem;}
+.ppf-stat-name{color:var(--text);}.ppf-stat-val{font-weight:600;color:var(--primary);}
+
+/* ── REAL-TIME SYSTEM LABOUR SIMULATOR ── */
+.simulator-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;margin-top:1.5rem;}
+@media(max-width:600px){.simulator-grid{grid-template-columns:1fr;}}
+.sim-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.4rem;}
+.sim-title{font-family:var(--sans);font-size:0.9rem;font-weight:700;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.sim-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+.sim-dot.gold{background:var(--gold);}
+.allocation-slider{margin-bottom:0.8rem;}
+.alloc-header{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--secondary);margin-bottom:4px;}
+
+input[type=range]{width:100%;height:6px;background:var(--border2);border-radius:3px;outline:none;cursor:pointer;-webkit-appearance:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.15);}
+.alloc-output{font-family:var(--mono);font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.8rem;}
+.alloc-out-val{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:6px 10px;text-align:center;}
+.alloc-out-label{font-size:9px;color:var(--secondary);display:block;margin-bottom:2px;}
+.alloc-out-num{font-size:1.05rem;font-weight:600;color:var(--primary);}
+
+.world-total{background:var(--primary);border:1px solid var(--primary);border-radius:8px;padding:1.4rem 1.6rem;margin-top:1rem;color:var(--surface);}
+.world-total-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--border2);margin-bottom:0.8rem;}
+.world-total-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;}
+@media(max-width:600px){.world-total-grid{grid-template-columns:1fr 1fr;}}
+.wt-item{text-align:center;}.wt-label{font-family:var(--mono);font-size:9px;color:var(--border2);margin-bottom:3px;}
+.wt-val{font-family:var(--mono);font-size:1.15rem;font-weight:500;}
+
+/* ══════════════════════════════════════════
+   SECTION 3: EVIDENCE WORKSPACE (MCQ)
+══════════════════════════════════════════ */
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+@media(max-width:700px){.evidence-grid{grid-template-columns:1fr;}}
+.evidence-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.evidence-card-header{padding:0.8rem 1.2rem;background:var(--surface3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.evidence-card-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--primary);font-weight:600;}
+.evidence-card-body{padding:1.4rem;background:var(--surface);}
+
+.evi-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;}
+.evi-table th{background:var(--surface2);color:var(--primary);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border:1px solid var(--border);text-align:center;}
+.evi-table td{padding:10px 12px;border:1px solid var(--border);text-align:center;color:var(--text);}
+.evi-table .row-head{text-align:left;font-family:var(--sans);font-size:0.8rem;font-weight:700;background:var(--surface2);color:var(--primary);}
+.evi-table .evi-low{color:var(--green);font-weight:600;}
+
+.worked-steps{display:flex;flex-direction:column;gap:0.6rem;}
+.worked-step{display:flex;gap:12px;align-items:flex-start;}
+.step-num{font-family:var(--mono);font-size:9px;color:var(--surface);background:var(--primary);padding:2px 8px;border-radius:2px;flex-shrink:0;margin-top:3px;font-weight:600;}
+.step-body{font-family:var(--mono);font-size:11px;color:var(--secondary);line-height:1.7;}
+.step-body .eq{color:var(--accent2);font-weight:600;}
+.step-body .res{color:var(--green);font-weight:600;}
+
+.handwritten-note{background:rgba(180,83,9,0.02);border:1px solid rgba(180,83,9,0.15);border-radius:6px;padding:1.2rem 1.4rem;font-style:italic;font-size:0.88rem;color:var(--text);line-height:1.8;}
+.handwritten-note::before{content:'📝 Course Analytical Insight';font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:0.6rem;font-weight:600;}
+
+/* MCQ verification interface */
+.mcq-wrap{display:flex;flex-direction:column;gap:1.4rem;}
+.mcq-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.4rem;}
+.mcq-q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:1rem;}
+.mcq-q-num{font-family:var(--mono);font-size:11px;background:var(--surface3);color:var(--primary);padding:3px 10px;border-radius:4px;font-weight:600;}
+.mcq-q-text{font-family:var(--sans);font-size:0.95rem;font-weight:600;color:var(--primary);line-height:1.4;}
+.mcq-options{display:flex;flex-direction:column;gap:0.5rem;}
+.mcq-opt{display:flex;align-items:center;gap:10px;padding:0.7rem 1rem;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all 0.2s;font-size:0.87rem;color:var(--text);background:var(--surface);}
+.mcq-opt:hover{border-color:var(--accent);background:var(--surface2);}
+.mcq-opt.selected{border-color:var(--primary);background:var(--primary);color:var(--surface);}
+.mcq-opt.correct-ans{border-color:var(--green)!important;background:rgba(16,185,129,0.08)!important;color:var(--green)!important;}
+.mcq-opt.wrong-ans{border-color:var(--red)!important;background:rgba(239,68,68,0.06)!important;color:var(--red)!important;}
+.mcq-opt-key{font-family:var(--mono);font-size:10px;background:var(--surface2);padding:2px 7px;border-radius:3px;color:var(--primary);}
+
+.mcq-feedback{margin-top:0.7rem;font-size:0.82rem;padding:0.6rem 1rem;border-radius:5px;display:none;font-style:italic;}
+.mcq-feedback.show{display:block;}
+.mcq-feedback.correct{background:rgba(16,185,129,0.05);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.mcq-feedback.wrong{background:rgba(239,68,68,0.04);color:var(--red);border:1px solid rgba(239,68,68,0.15);}
+
+.submit-test-btn{
+  display:block;width:100%;margin-top:1.5rem;padding:1rem;font-family:var(--sans);
+  font-size:1rem;font-weight:700;letter-spacing:1px;background:var(--accent);
+  color:var(--primary);border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;
+}
+.submit-test-btn:hover{transform:translateY(-2px);background:#22d3ee;}
+
+.test-score-box{display:none;margin-top:1.5rem;border-radius:8px;padding:1.6rem;text-align:center;border:1px solid var(--border);background:var(--surface2);}
+.test-score-box.show{display:block;}
+.score-title{font-family:var(--sans);font-size:1.5rem;font-weight:800;color:var(--primary);}
+.score-sub{font-family:var(--mono);font-size:11px;color:var(--secondary);margin-bottom:1rem;}
+.retry-btn{
+  display:inline-block;margin-top:1rem;padding:8px 24px;font-family:var(--mono);font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border2);border-radius:5px;
+  color:var(--primary);cursor:pointer;background:var(--surface);
+}
+
+/* ══════════════════════════════════════════
+   SECTION 4: REFLECTION METRICS
+══════════════════════════════════════════ */
+.reflection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+.reflection-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.4rem;position:relative;overflow:hidden;}
+.reflection-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--accent));}
+.reflection-icon{font-size:1.8rem;margin-bottom:0.7rem;}
+.reflection-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem;color:var(--secondary);}
+.reflection-title{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:0.7rem;}
+.reflection-body{font-size:0.86rem;color:var(--text);line-height:1.7;}
+.reflection-body ul{padding-left:1rem;margin:0.3rem 0;}
+.reflection-body ul li{margin-bottom:0.25rem;}
+.takeaway-strip{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.2rem;}
+.takeaway{font-family:var(--mono);font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:100px;border:1px solid var(--border2);color:var(--secondary);background:var(--surface);}
+.takeaway.k{border-color:rgba(20,184,166,0.3);color:var(--accent2);background:rgba(20,184,166,0.02);}
+.takeaway.s{border-color:rgba(16,185,129,0.3);color:var(--green);background:rgba(16,185,129,0.02);}
+
+/* ── Angry Overlay Modal ── */
+#angryOverlay{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(15,23,42,0.96);
+  flex-direction:column;align-items:center;justify-content:center;
+}
+#angryOverlay.show{display:flex;}
+.angry-emoji{font-size:7rem;line-height:1;animation:angryShake 0.3s ease infinite;}
+@keyframes angryShake{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg) scale(1.02);}}
+.angry-text{font-family:var(--sans);font-size:2rem;font-weight:800;color:var(--red);margin-top:1.5rem;text-align:center;}
+.angry-sub{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--secondary);margin-top:0.8rem;}
+.angry-close{margin-top:2rem;padding:10px 28px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;background:var(--red);color:#fff;border:none;border-radius:6px;cursor:pointer;}
+
+#toast{position:fixed;bottom:2rem;right:2rem;background:var(--primary);color:var(--surface);font-family:var(--mono);font-size:11px;padding:10px 20px;border-radius:6px;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;z-index:999;}
+#toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div id="pbar"></div>
+<div id="angryOverlay">
+  <div class="angry-emoji">😤</div>
+  <div class="angry-text">WRONG ANSWER!</div>
+  <div class="angry-sub">Review David Ricardo's Classical Trade Hypotheses</div>
+  <button class="angry-close" onclick="closeAngry()">Try Again →</button>
+</div>
+
+<div id="toast"></div>
+
+<div class="wrap">
+
+<header>
+  <div class="header-eyebrow"><div class="dot-pulse"></div>International Trade</div>
+  <h1>RICARDEX</h1>
+  <div class="header-tagline">The Trade Advantage Engine — by David Ricardo's Principle</div>
+  <div class="header-line"></div>
+</header>
+
+<nav class="page-nav">
+  <a href="#overview">Project Overview</a>
+  <a href="#demo">Demonstration</a>
+  <a href="#evidence">Evidence Workspace</a>
+  <a href="#reflection">What I Learned</a>
+</nav>
+
+<div id="overview" class="portfolio-marker">
+  <div class="portfolio-marker-num">01</div>
+  <div class="portfolio-marker-title">Project Overview</div>
+  <div class="portfolio-marker-line"></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">🌐</div>
+    <div>
+      <div class="card-title">What Is This Page About?</div>
+      <div class="card-sub">Assignment context · Core concept · Why it matters</div>
+    </div>
+  </div>
+
+  <p class="overview-prose">
+    This project was built as part of an <strong>International Trade Economics</strong> course assignment exploring the foundations of why nations trade. The assignment asked us to analyze two countries producing two goods and determine, step by step, who holds <strong>absolute advantage</strong>, how to construct an <strong>opportunity cost matrix</strong>, and which country should specialize in which good according to <strong>Comparative Advantage</strong> — David Ricardo's central insight from 1817.
+  </p>
+  <p class="overview-prose">
+    Rather than submitting a static worksheet, I built an interactive tool that replicates the full analytical workflow. Any two countries and any two goods can be entered, and the tool computes every result instantly — from raw productivity comparisons through to PPF configurations and world output gains from specialization.
+  </p>
+
+  <div class="course-badge">
+    <div class="course-badge-label">Course Assignment</div>
+    <div class="course-badge-value">International Trade Economics — Comparative Advantage Analysis</div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-item" style="--c:var(--accent)">
+      <div class="concept-item-icon">⚡</div>
+      <div class="concept-item-title">Absolute Advantage</div>
+      <div class="concept-item-desc">A country has absolute advantage when it can produce more of a good per resource unit than another. Introduced by Adam Smith. Important, but not the full story.</div>
+    </div>
+    <div class="concept-item" style="--c:var(--gold)">
+      <div class="concept-item-icon">⚖️</div>
+      <div class="concept-item-title">Opportunity Cost</div>
+      <div class="concept-item-desc">The real cost of producing one unit of a good is the quantity of the other good that must be given up. Calculated as: OC(Good 1) = output(Good 2) ÷ output(Good 1).</div>
+    </div>
+    <div class="concept-item" style="--c:var(--green)">
+      <div class="concept-item-icon">🎯</div>
+      <div class="concept-item-title">Comparative Advantage</div>
+      <div class="concept-item-desc">Ricardo's breakthrough insight: Trade is mutually beneficial if countries specialize in goods where they hold a lower opportunity cost, even if they lack absolute advantage in both.</div>
+    </div>
+  </div>
+</div>
+
+<div id="demo" class="portfolio-marker">
+  <div class="portfolio-marker-num" style="background:var(--gold)">02</div>
+  <div class="portfolio-marker-title">Interactive Engine Runway</div>
+  <div class="portfolio-marker-line"></div>
+</div>
+
+<div class="preset-container">
+  <span class="preset-title">Load Assignment Benchmarks:</span>
+  <div class="scenario-badge active" id="presetClassic" onclick="loadPreset('classic')">Classic (Textbook)</div>
+  <div class="scenario-badge" id="presetAsymmetric" onclick="loadPreset('asymmetric')">Total Dominance (Asymmetric)</div>
+  <div class="scenario-badge" id="presetEqual" onclick="loadPreset('equal')">Zero Advantage Symmetric</div>
+</div>
+
+<div class="input-grid">
+  <div class="country-block a-side">
+    <input type="text" id="cA_name" class="country-name-input" value="Westland">
+    
+    <div class="field-row">
+      <div class="field-label">Good 1 Label</div>
+      <input type="text" id="g1_label" class="country-name-input" value="Computers" style="font-size:0.85rem; margin-bottom:0.5rem;">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Good 1 Productivity <span class="field-unit">Qty / Worker Hour</span></div>
+      <input type="number" id="cA_g1" class="num-input" value="10" min="1">
+    </div>
+
+    <div class="field-row">
+      <div class="field-label">Good 2 Label</div>
+      <input type="text" id="g2_label" class="country-name-input" value="Grain" style="font-size:0.85rem; margin-bottom:0.5rem;">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Good 2 Productivity <span class="field-unit">Qty / Worker Hour</span></div>
+      <input type="number" id="cA_g2" class="num-input" value="5" min="1">
+    </div>
+
+    <div class="resources-row">
+      <label>Labor Pool Available:</label>
+      <input type="number" id="cA_res" class="num-input" value="1000" min="1" style="padding:6px 10px; font-size:0.95rem;">
+    </div>
+  </div>
+
+  <div class="input-vs">VS</div>
+
+  <div class="country-block b-side">
+    <input type="text" id="cB_name" class="country-name-input b" value="Eastland">
+    
+    <div class="field-row" style="visibility:hidden; height:53px; margin-bottom:0.5rem;"></div>
+    <div class="field-row">
+      <div class="field-label">Good 1 Productivity <span class="field-unit">Qty / Worker Hour</span></div>
+      <input type="number" id="cB_g1" class="num-input b" value="2" min="1">
+    </div>
+
+    <div class="field-row" style="visibility:hidden; height:53px; margin-bottom:0.5rem;"></div>
+    <div class="field-row">
+      <div class="field-label">Good 2 Productivity <span class="field-unit">Qty / Worker Hour</span></div>
+      <input type="number" id="cB_g2" class="num-input b" value="4" min="1">
+    </div>
+
+    <div class="resources-row">
+      <label>Labor Pool Available:</label>
+      <input type="number" id="cB_res" class="num-input b" value="1000" min="1" style="padding:6px 10px; font-size:0.95rem;">
+    </div>
+  </div>
+</div>
+
+<div class="section-label">
+  <div class="section-num">Result Core A</div>
+  <div class="section-title">Maximum Production Caps & Frontiers</div>
+  <div class="section-line"></div>
+</div>
+
+<div class="results-grid">
+  <div class="result-card" style="--c:var(--accent)">
+    <div class="result-card-label"><span class="cA_name_lbl">Westland</span> Max <span class="g1_name_lbl">Computers</span></div>
+    <div class="result-card-value" id="cA_max_g1">10,000</div>
+  </div>
+  <div class="result-card" style="--c:var(--accent)">
+    <div class="result-card-label"><span class="cA_name_lbl">Westland</span> Max <span class="g2_name_lbl">Grain</span></div>
+    <div class="result-card-value" id="cA_max_g2">5,000</div>
+  </div>
+  <div class="result-card" style="--c:var(--gold)">
+    <div class="result-card-label"><span class="cB_name_lbl">Eastland</span> Max <span class="g1_name_lbl">Computers</span></div>
+    <div class="result-card-value" id="cB_max_g1">2,000</div>
+  </div>
+  <div class="result-card" style="--c:var(--gold)">
+    <div class="result-card-label"><span class="cB_name_lbl">Eastland</span> Max <span class="g2_name_lbl">Grain</span></div>
+    <div class="result-card-value" id="cB_max_g2">4,000</div>
+  </div>
+</div>
+
+<div class="section-label">
+  <div class="section-num">Result Core B</div>
+  <div class="section-title">Calculated Opportunity Cost Matrix</div>
+  <div class="section-line"></div>
+</div>
+
+<table class="oc-matrix">
+  <thead>
+    <tr>
+      <th>Country</th>
+      <th>Cost of 1 Unit of <span class="g1_name_lbl">Computers</span></th>
+      <th>Cost of 1 Unit of <span class="g2_name_lbl">Grain</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="country-cell cA_name_lbl">Westland</td>
+      <td>
+        <div class="oc-val" id="oc_A_g1">0.50</div>
+        <div class="oc-formula">Opportunity Cost in <span class="g2_name_lbl">Grain</span></div>
+        <div id="badge_A_g1" class="oc-badge"></div>
+      </td>
+      <td>
+        <div class="oc-val" id="oc_A_g2">2.00</div>
+        <div class="oc-formula">Opportunity Cost in <span class="g1_name_lbl">Computers</span></div>
+        <div id="badge_A_g2" class="oc-badge"></div>
+      </td>
+    </tr>
+    <tr>
+      <td class="country-cell cB_name_lbl">Eastland</td>
+      <td>
+        <div class="oc-val" id="oc_B_g1">2.00</div>
+        <div class="oc-formula">Opportunity Cost in <span class="g2_name_lbl">Grain</span></div>
+        <div id="badge_B_g1" class="oc-badge"></div>
+      </td>
+      <td>
+        <div class="oc-val" id="oc_B_g2">0.50</div>
+        <div class="oc-formula">Opportunity Cost in <span class="g1_name_lbl">Computers</span></div>
+        <div id="badge_B_g2" class="oc-badge"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="ca-result">
+  <div class="ca-card">
+    <div class="ca-country cA_name_lbl">Westland</div>
+    <div class="ca-specializes">Assigned Strategic Specialization:</div>
+    <div class="ca-good" id="spec_cA">Computers</div>
+    <div class="ca-reason">Lower opportunity cost structure allows production efficiency optimizations.</div>
+  </div>
+  <div class="ca-card">
+    <div class="ca-country cB_name_lbl">Eastland</div>
+    <div class="ca-specializes">Assigned Strategic Specialization:</div>
+    <div class="ca-good gold" id="spec_cB">Grain</div>
+    <div class="ca-reason">Comparative advantage verified via systemic relative cost metrics.</div>
+  </div>
+</div>
+
+<div class="section-label">
+  <div class="section-num">Result Core C</div>
+  <div class="section-title">Production Possibility Frontier (PPF) Visualizer</div>
+  <div class="section-line"></div>
+</div>
+
+<div class="ppf-wrap">
+  <canvas id="ppfCanvas" width="500" height="320"></canvas>
+  <div class="ppf-controls">
+    <div class="ppf-stat">
+      <div class="ppf-stat-label">Linear Slope Frontiers</div>
+      <div class="ppf-stat-row">
+        <span class="ppf-stat-name"><span class="cA_name_lbl">Westland</span> (Y/X)</span>
+        <span class="ppf-stat-val" id="slope_cA">-0.50</span>
+      </div>
+      <div class="ppf-stat-row">
+        <span class="ppf-stat-name"><span class="cB_name_lbl">Eastland</span> (Y/X)</span>
+        <span class="ppf-stat-val" id="slope_cB">-2.00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">
+  <div class="section-num">Result Core D</div>
+  <div class="section-title">Real-Time Labor Allocation Simulator</div>
+  <div class="section-line"></div>
+</div>
+
+<div class="simulator-grid">
+  <div class="sim-block">
+    <div class="sim-title"><div class="sim-dot"></div><span class="cA_name_lbl">Westland</span> Resource Allocation</div>
+    <div class="allocation-slider">
+      <div class="alloc-header">
+        <span>To <span class="g1_name_lbl">Computers</span></span>
+        <span>To <span class="g2_name_lbl">Grain</span></span>
+      </div>
+      <input type="range" id="sim_A_pct" min="0" max="100" value="50">
+    </div>
+    <div class="alloc-output">
+      <div class="alloc-out-val">
+        <span class="alloc-out-label"><span class="g1_name_lbl">Computers</span> Qty</span>
+        <span class="alloc-out-num" id="sim_A_g1">5,000</span>
+      </div>
+      <div class="alloc-out-val">
+        <span class="alloc-out-label"><span class="g2_name_lbl">Grain</span> Qty</span>
+        <span class="alloc-out-num" id="sim_A_g2">2,500</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim-block">
+    <div class="sim-title"><div class="sim-dot gold"></div><span class="cB_name_lbl">Eastland</span> Resource Allocation</div>
+    <div class="allocation-slider">
+      <div class="alloc-header">
+        <span>To <span class="g1_name_lbl">Computers</span></span>
+        <span>To <span class="g2_name_lbl">Grain</span></span>
+      </div>
+      <input type="range" id="sim_B_pct" min="0" max="100" value="50">
+    </div>
+    <div class="alloc-output">
+      <div class="alloc-out-val">
+        <span class="alloc-out-label"><span class="g1_name_lbl">Computers</span> Qty</span>
+        <span class="alloc-out-num" id="sim_B_g1">1,000</span>
+      </div>
+      <div class="alloc-out-val">
+        <span class="alloc-out-label"><span class="g2_name_lbl">Grain</span> Qty</span>
+        <span class="alloc-out-num" id="sim_B_g2">2,000</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="world-total">
+  <div class="world-total-title">Global Output Matrix Equilibrium</div>
+  <div class="world-total-grid">
+    <div class="wt-item">
+      <div class="wt-label">Current <span class="g1_name_lbl">Computers</span></div>
+      <div class="wt-val" id="world_curr_g1">6,000</div>
+    </div>
+    <div class="wt-item">
+      <div class="wt-label">Current <span class="g2_name_lbl">Grain</span></div>
+      <div class="wt-val" id="world_curr_g2">4,500</div>
+    </div>
+    <div class="wt-item" style="border-left: 1px solid var(--secondary); padding-left:0.5rem;">
+      <div class="wt-label" style="color:var(--accent);">Ricardian Max <span class="g1_name_lbl">Computers</span></div>
+      <div class="wt-val" id="world_opt_g1" style="color:var(--accent);">10,000</div>
+    </div>
+    <div class="wt-item">
+      <div class="wt-label" style="color:var(--accent);">Ricardian Max <span class="g2_name_lbl">Grain</span></div>
+      <div class="wt-val" id="world_opt_g2" style="color:var(--accent);">4,000</div>
+    </div>
+  </div>
+</div>
+
+<div id="evidence" class="portfolio-marker">
+  <div class="portfolio-marker-num" style="background:var(--purple)">03</div>
+  <div class="portfolio-marker-title">Evidence Workspace & Verification</div>
+  <div class="portfolio-marker-line"></div>
+</div>
+
+<div class="evidence-grid">
+  <div class="evidence-card">
+    <div class="evidence-card-header">
+      <div class="evidence-card-title">Static Textbook Solution Proof</div>
+    </div>
+    <div class="evidence-card-body">
+      <table class="evi-table">
+        <thead>
+          <tr>
+            <th>Country</th>
+            <th>OC of 1 Computer</th>
+            <th>OC of 1 Grain</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-head">Westland</td>
+            <td class="evi-low">0.5 Grain (Winner)</td>
+            <td class="evi-high">2.0 Computers</td>
+          </tr>
+          <tr>
+            <td class="row-head">Eastland</td>
+            <td class="evi-high">2.0 Grain</td>
+            <td class="evi-low">0.5 Computers (Winner)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="evidence-card-header">
+      <div class="evidence-card-title">Mathematical Formula Progression</div>
+    </div>
+    <div class="evidence-card-body">
+      <div class="worked-steps">
+        <div class="worked-step">
+          <div class="step-num">1</div>
+          <div class="step-body">Westland Opp. Cost of 1 Computer = <span class="eq">5 Grain ÷ 10 Computers</span> = <span class="res">0.5 Grain</span>.</div>
+        </div>
+        <div class="worked-step">
+          <div class="step-num">2</div>
+          <div class="step-body">Eastland Opp. Cost of 1 Computer = <span class="eq">4 Grain ÷ 2 Computers</span> = <span class="res">2.0 Grain</span>.</div>
+        </div>
+        <div class="worked-step">
+          <div class="step-num">3</div>
+          <div class="step-body">Compare: <span class="eq">0.5 &lt; 2.0</span>. Therefore, Westland holds the Comparative Advantage in Good 1.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="handwritten-note">
+  Notice that in the "Total Dominance" scenario, one country is completely superior in raw hour-by-hour production of both commodities. Yet, because their relative cost cross-ratios remain mathematically divergent, both systems still secure system-wide trade expansions by trading along specialization paths.
+</div>
+
+<div class="section-label">
+  <div class="section-num">Assessment</div>
+  <div class="section-title">Verification & Comprehension Assessment</div>
+  <div class="section-line"></div>
+</div>
+
+<div class="mcq-wrap">
+  <div class="mcq-card" data-q="1">
+    <div class="mcq-q-header">
+      <div class="mcq-q-num">Q1</div>
+      <div class="mcq-q-text">Is Absolute Advantage a necessary mathematical prerequisite for a nation to capture positive gains from trade corridors?</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-a="A"><span class="mcq-opt-key">A</span> Yes, absolute cost parameters dictate absolute global trading floors.</div>
+      <div class="mcq-opt" data-a="B"><span class="mcq-opt-key">B</span> No, comparative advantage functions entirely on relative opportunity costs.</div>
+      <div class="mcq-opt" data-a="C"><span class="mcq-opt-key">C</span> Only if currency exchange variables match historical gold standards.</div>
+    </div>
+    <div class="mcq-feedback wrong">Incorrect. Review David Ricardo's primary law—relative ratios matter, not absolute metrics.</div>
+    <div class="mcq-feedback correct">Correct! Even if a country has lower productivity across all sectors, trade optimizes total systemic capacity.</div>
+  </div>
+
+  <div class="mcq-card" data-q="2">
+    <div class="mcq-q-header">
+      <div class="mcq-q-num">Q2</div>
+      <div class="mcq-q-text">If a country trades along a linear production path, the slope of its structural PPF boundary line directly conveys:</div>
+    </div>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-a="A"><span class="mcq-opt-key">A</span> The internal opportunity cost ratio of the good plotted on the horizontal X-axis.</div>
+      <div class="mcq-opt" data-a="B"><span class="mcq-opt-key">B</span> The total workforce population density scaling metric.</div>
+      <div class="mcq-opt" data-a="C"><span class="mcq-opt-key">C</span> The raw tariff barrier coefficient.</div>
+    </div>
+    <div class="mcq-feedback wrong">Incorrect. The marginal line derivative $\Delta Y / \Delta X$ calculates item opportunity sacrifices.</div>
+    <div class="mcq-feedback correct">Correct! The linear frontier slope calculates exactly how much vertical capital is yielded per horizontal item asset.</div>
+  </div>
+</div>
+
+<button class="submit-test-btn" onclick="gradeMCQ()">Submit Portfolio Verification Quiz</button>
+
+<div class="test-score-box" id="scoreBox">
+  <div class="score-title" id="scoreTitle">Passed (2/2)</div>
+  <div class="score-sub">Macroeconomic verification assessment metric logs cleared.</div>
+  <button class="retry-btn" onclick="resetMCQ()">Reset Assessment</button>
+</div>
+
+<div id="reflection" class="portfolio-marker">
+  <div class="portfolio-marker-num" style="background:var(--accent)">04</div>
+  <div class="portfolio-marker-title">What I Learned</div>
+  <div class="portfolio-marker-line"></div>
+</div>
+
+<div class="reflection-grid">
+  <div class="reflection-card" style="--c:var(--accent)">
+    <div class="reflection-icon">🧠</div>
+    <div class="reflection-label">Economic Theory</div>
+    <div class="reflection-title">Opportunity Cost Realizations</div>
+    <div class="reflection-body">
+      Building this tool forced me to move beyond memorized definitions. I learned that opportunity cost isn't just an abstract cost; it is a strict mathematical ratio that determines trade frontiers.
+    </div>
+  </div>
+  <div class="reflection-card" style="--c:var(--gold)">
+    <div class="reflection-icon">🛠️</div>
+    <div class="reflection-label">Technical Skill</div>
+    <div class="reflection-title">Dynamic Calculation Engines</div>
+    <div class="reflection-body">
+      I learned how to tie HTML range elements to a custom Canvas rendering loop. Synchronizing mathematical formulas directly into responsive visual lines made complex concepts much easier to grasp.
+    </div>
+  </div>
+</div>
+
+</div> <script>
+const appState = {
+  cA: { name: "Westland", g1: 10, g2: 5, res: 1000, alloc: 50 },
+  cB: { name: "Eastland", g1: 2, g2: 4, res: 1000, alloc: 50 },
+  labels: { g1: "Computers", g2: "Grain" }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupStateHooks();
+  calculateSystem();
+});
+
+function loadPreset(type) {
+  document.querySelectorAll('.scenario-badge').forEach(b => b.classList.remove('active'));
+  
+  if (type === 'classic') {
+    document.getElementById('presetClassic').classList.add('active');
+    appState.cA = { name: "Westland", g1: 10, g2: 5, res: 1000, alloc: 50 };
+    appState.cB = { name: "Eastland", g1: 2, g2: 4, res: 1000, alloc: 50 };
+    appState.labels = { g1: "Computers", g2: "Grain" };
+  } else if (type === 'asymmetric') {
+    document.getElementById('presetAsymmetric').classList.add('active');
+    appState.cA = { name: "AlphaCorp", g1: 24, g2: 12, res: 1000, alloc: 50 };
+    appState.cB = { name: "BetaCorp", g1: 3, g2: 9, res: 1000, alloc: 50 };
+    appState.labels = { g1: "Microchips", g2: "Textiles" };
+  } else if (type === 'equal') {
+    document.getElementById('presetEqual').classList.add('active');
+    appState.cA = { name: "NorthNation", g1: 8, g2: 8, res: 1000, alloc: 50 };
+    appState.cB = { name: "SouthNation", g1: 4, g2: 4, res: 1000, alloc: 50 };
+    appState.labels = { g1: "Electronics", g2: "Biofuel" };
+  }
+  
+  pushInputsFromState();
+  calculateSystem();
+  showToast("Preset Scenario Loaded & Rerendered.");
+}
+
+function pushInputsFromState() {
+  document.getElementById("cA_name").value = appState.cA.name;
+  document.getElementById("cA_g1").value = appState.cA.g1;
+  document.getElementById("cA_g2").value = appState.cA.g2;
+  document.getElementById("cA_res").value = appState.cA.res;
+  
+  document.getElementById("cB_name").value = appState.cB.name;
+  document.getElementById("cB_g1").value = appState.cB.g1;
+  document.getElementById("cB_g2").value = appState.cB.g2;
+  document.getElementById("cB_res").value = appState.cB.res;
+  
+  document.getElementById("g1_label").value = appState.labels.g1;
+  document.getElementById("g2_label").value = appState.labels.g2;
+  
+  document.getElementById("sim_A_pct").value = appState.cA.alloc;
+  document.getElementById("sim_B_pct").value = appState.cB.alloc;
+}
+
+function setupStateHooks() {
+  const monitors = [
+    { id: "cA_name", obj: "cA", k: "name", t: "str" },
+    { id: "cA_g1", obj: "cA", k: "g1", t: "num" },
+    { id: "cA_g2", obj: "cA", k: "g2", t: "num" },
+    { id: "cA_res", obj: "cA", k: "res", t: "num" },
+    { id: "cB_name", obj: "cB", k: "name", t: "str" },
+    { id: "cB_g1", obj: "cB", k: "g1", t: "num" },
+    { id: "cB_g2", obj: "cB", k: "g2", t: "num" },
+    { id: "cB_res", obj: "cB", k: "res", t: "num" },
+    { id: "g1_label", obj: "labels", k: "g1", t: "str" },
+    { id: "g2_label", obj: "labels", k: "g2", t: "str" }
+  ];
+
+  monitors.forEach(item => {
+    document.getElementById(item.id).addEventListener("input", (e) => {
+      let v = e.target.value;
+      if (item.t === "num") { v = parseFloat(v) || 0; if (v < 0) v = 0; }
+      
+      if (item.obj === "labels") appState.labels[item.k] = v;
+      else appState[item.obj][item.k] = v;
+      calculateSystem();
+    });
+  });
+
+  document.getElementById("sim_A_pct").addEventListener("input", (e) => { appState.cA.alloc = e.target.value; calculateSystem(); });
+  document.getElementById("sim_B_pct").addEventListener("input", (e) => { appState.cB.alloc = e.target.value; calculateSystem(); });
+
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    if (total === 0) return;
+    document.getElementById('pbar').style.width = (window.scrollY / total) * 100 + '%';
+  });
+
+  document.querySelectorAll('.mcq-opt').forEach(opt => {
+    opt.addEventListener("click", function() {
+      if (this.closest('.mcq-card').classList.contains('locked')) return;
+      this.parentElement.querySelectorAll('.mcq-opt').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+}
+
+function calculateSystem() {
+  const cA = appState.cA; const cB = appState.cB; const lbl = appState.labels;
+
+  // Sync label prints text contents across template bindings
+  document.querySelectorAll(".g1_name_lbl").forEach(el => el.textContent = lbl.g1);
+  document.querySelectorAll(".g2_name_lbl").forEach(el => el.textContent = lbl.g2);
+  document.querySelectorAll(".cA_name_lbl").forEach(el => el.textContent = cA.name);
+  document.querySelectorAll(".cB_name_lbl").forEach(el => el.textContent = cB.name);
+
+  // Maximum production thresholds output calculus
+  const maxA1 = cA.g1 * cA.res; const maxA2 = cA.g2 * cA.res;
+  const maxB1 = cB.g1 * cB.res; const maxB2 = cB.g2 * cB.res;
+
+  document.getElementById("cA_max_g1").textContent = Math.round(maxA1).toLocaleString();
+  document.getElementById("cA_max_g2").textContent = Math.round(maxA2).toLocaleString();
+  document.getElementById("cB_max_g1").textContent = Math.round(maxB1).toLocaleString();
+  document.getElementById("cB_max_g2").textContent = Math.round(maxB2).toLocaleString();
+
+  // Opportunity Cost formulas evaluation
+  const ocA1 = cA.g1 !== 0 ? (cA.g2 / cA.g1) : 0;
+  const ocA2 = cA.g2 !== 0 ? (cA.g1 / cA.g2) : 0;
+  const ocB1 = cB.g1 !== 0 ? (cB.g2 / cB.g1) : 0;
+  const ocB2 = cB.g2 !== 0 ? (cB.g1 / cB.g2) : 0;
+
+  document.getElementById("oc_A_g1").textContent = ocA1.toFixed(2);
+  document.getElementById("oc_A_g2").textContent = ocA2.toFixed(2);
+  document.getElementById("oc_B_g1").textContent = ocB1.toFixed(2);
+  document.getElementById("oc_B_g2").textContent = ocB2.toFixed(2);
+
+  // Apply comparison indicators styles
+  evalBadgePair(ocA1, ocB1, "badge_A_g1", "badge_B_g1");
+  evalBadgePair(ocA2, ocB2, "badge_A_g2", "badge_B_g2");
+
+  // Determine Specialization Assignments
+  const specA = document.getElementById("spec_cA");
+  const specB = document.getElementById("spec_cB");
+  if (ocA1 <= ocB1) {
+    specA.textContent = lbl.g1; specA.className = "ca-good";
+    specB.textContent = lbl.g2; specB.className = "ca-good gold";
+  } else {
+    specA.textContent = lbl.g2; specA.className = "ca-good gold";
+    specB.textContent = lbl.g1; specB.className = "ca-good";
+  }
+
+  // Draw PPF Canvas plots
+  document.getElementById("slope_cA").textContent = (-ocA1).toFixed(2);
+  document.getElementById("slope_cB").textContent = (-ocB1).toFixed(2);
+  drawPPFDiagram(cA, cB, maxA1, maxA2, maxB1, maxB2);
+
+  // System Allocator Calculations
+  const liveA1 = (cA.alloc / 100) * maxA1;
+  const liveA2 = ((100 - cA.alloc) / 100) * maxA2;
+  const liveB1 = (cB.alloc / 100) * maxB1;
+  const liveB2 = ((100 - cB.alloc) / 100) * maxB2;
+
+  document.getElementById("sim_A_g1").textContent = Math.round(liveA1).toLocaleString();
+  document.getElementById("sim_A_g2").textContent = Math.round(liveA2).toLocaleString();
+  document.getElementById("sim_B_g1").textContent = Math.round(liveB1).toLocaleString();
+  document.getElementById("sim_B_g2").textContent = Math.round(liveB2).toLocaleString();
+
+  // Fleet Global Sums
+  const currentWorld1 = liveA1 + liveB1;
+  const currentWorld2 = liveA2 + liveB2;
+  document.getElementById("world_curr_g1").textContent = Math.round(currentWorld1).toLocaleString();
+  document.getElementById("world_curr_g2").textContent = Math.round(currentWorld2).toLocaleString();
+
+  // Theoretical limits under perfect optimization
+  let optWorld1 = 0, optWorld2 = 0;
+  if (ocA1 <= ocB1) {
+    optWorld1 = maxA1; optWorld2 = maxB2;
+  } else {
+    optWorld1 = maxB1; optWorld2 = maxA2;
+  }
+  document.getElementById("world_opt_g1").textContent = Math.round(optWorld1).toLocaleString();
+  document.getElementById("world_opt_g2").textContent = Math.round(optWorld2).toLocaleString();
+}
+
+function evalBadgePair(vA, vB, idA, idB) {
+  const bA = document.getElementById(idA); const bB = document.getElementById(idB);
+  if (vA === vB) {
+    bA.textContent = "Parity Ratio"; bA.className = "oc-badge loser";
+    bB.textContent = "Parity Ratio"; bB.className = "oc-badge loser";
+  } else if (vA < vB) {
+    bA.textContent = "✓ Lower Cost Advantage"; bA.className = "oc-badge winner";
+    bB.textContent = "Higher Cost Sacrifices"; bB.className = "oc-badge loser";
+  } else {
+    bA.textContent = "Higher Cost Sacrifices"; bA.className = "oc-badge loser";
+    bB.textContent = "✓ Lower Cost Advantage"; bB.className = "oc-badge winner";
+  }
+}
+
+function drawPPFDiagram(cA, cB, maxA1, maxA2, maxB1, maxB2) {
+  const canvas = document.getElementById("ppfCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const pad = 50;
+  const w = canvas.width - (pad * 2);
+  const h = canvas.height - (pad * 2);
+
+  const limX = Math.max(maxA1, maxB1, 1);
+  const limY = Math.max(maxA2, maxB2, 1);
+
+  const transX = (val) => pad + (val / limX) * w;
+  const transY = (val) => (canvas.height - pad) - (val / limY) * h;
+
+  // Graph structural grid boundary lines
+  ctx.strokeStyle = "#cbd5e1";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad); ctx.lineTo(pad, canvas.height - pad); ctx.lineTo(canvas.width - pad, canvas.height - pad);
+  ctx.stroke();
+
+  // Graph Axis Prints
+  ctx.fillStyle = "#64748b";
+  ctx.font = "9px 'JetBrains Mono', monospace";
+  ctx.fillText(appState.labels.g1 + " →", canvas.width - pad - 50, canvas.height - pad + 15);
+  
+  ctx.save();
+  ctx.translate(pad - 15, pad + 30);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText(appState.labels.g2 + " →", 0, 0);
+  ctx.restore();
+
+  // Chart intercept tags text prints
+  ctx.fillStyle = "#94a3b8";
+  ctx.fillText(Math.round(maxA2).toLocaleString(), pad - 35, transY(maxA2) + 3);
+  ctx.fillText(Math.round(maxA1).toLocaleString(), transX(maxA1) - 15, canvas.height - pad + 15);
+  ctx.fillText(Math.round(maxB2).toLocaleString(), pad - 35, transY(maxB2) + 3);
+  ctx.fillText(Math.round(maxB1).toLocaleString(), transX(maxB1) - 15, canvas.height - pad + 15);
+
+  // Draw Line Alpha (Teal curve path)
+  ctx.strokeStyle = "#14b8a6";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(transX(0), transY(maxA2)); ctx.lineTo(transX(maxA1), transY(0));
+  ctx.stroke();
+
+  // Draw Line Beta (Amber curve path)
+  ctx.strokeStyle = "#b45309";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(transX(0), transY(maxB2)); ctx.lineTo(transX(maxB1), transY(0));
+  ctx.stroke();
+}
+
+function gradeMCQ() {
+  const elements = document.querySelectorAll(".mcq-card");
+  let score = 0; let total = elements.length;
+  let validationError = false;
+  
+  const keyMap = { "1": "B", "2": "A" };
+
+  elements.forEach(card => {
+    const qNum = card.getAttribute("data-q");
+    const chosen = card.querySelector(".mcq-opt.selected");
+    card.classList.add("locked");
+
+    if (!chosen) { validationError = true; return; }
+
+    const answer = chosen.getAttribute("data-a");
+    if (answer === keyMap[qNum]) {
+      score++;
+      chosen.classList.add("correct-ans");
+      card.querySelector(".mcq-feedback.correct").classList.add("show");
+    } else {
+      chosen.classList.add("wrong-ans");
+      card.querySelector(".mcq-feedback.wrong").classList.add("show");
+    }
+  });
+
+  if (validationError || score < total) {
+    document.getElementById("angryOverlay").classList.add("show");
+  } else {
+    const sBox = document.getElementById("scoreBox");
+    document.getElementById("scoreTitle").textContent = `Passed (${score}/${total})`;
+    sBox.classList.add("show");
+    showToast("Portfolio Verification Metres Cleared Successfully!");
+  }
+}
+
+function resetMCQ() {
+  document.querySelectorAll(".mcq-card").forEach(card => {
+    card.classList.remove("locked");
+    card.querySelectorAll(".mcq-opt").forEach(o => o.className = "mcq-opt");
+    card.querySelectorAll(".mcq-feedback").forEach(f => f.classList.remove("show"));
+  });
+  document.getElementById("scoreBox").classList.remove("show");
+  showToast("Quiz Module reset.");
+}
+
+function closeAngry() {
+  document.getElementById("angryOverlay").classList.remove("show");
+  resetMCQ();
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000);
+}
+</script>
+</body>
+</html>
