@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSP — Travelling Salesman Problem</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161922;
+    --surface2: #1e2330;
+    --border: #2a3040;
+    --accent: #f4a829;
+    --accent2: #e05c2a;
+    --green: #3fcf8e;
+    --blue: #5b8af5;
+    --text: #e8eaf0;
+    --muted: #7a8399;
+    --node-wh: #f4a829;
+    --node-a: #5b8af5;
+    --node-b: #3fcf8e;
+    --node-c: #c97cf5;
+    --node-d: #e05c2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    padding: 40px 48px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .header-left h1 span { color: var(--accent); }
+  .header-left p {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .badge span { color: var(--accent); font-weight: 700; }
+
+  /* MAIN LAYOUT */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    header { padding: 24px; }
+  }
+
+  section {
+    padding: 32px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-child, section:nth-child(2n) { border-right: none; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+
+  /* DISTANCE TABLE */
+  .dist-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+  .dist-table th, .dist-table td {
+    padding: 10px 14px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .dist-table th {
+    background: var(--surface2);
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .dist-table td { background: var(--surface); }
+  .dist-table td.self { color: var(--border); }
+  .dist-table td.highlight { color: var(--accent); font-weight: 700; }
+  .dist-table .row-header {
+    background: var(--surface2);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .col-wh { color: var(--node-wh) !important; }
+  .col-a  { color: var(--node-a)  !important; }
+  .col-b  { color: var(--node-b)  !important; }
+  .col-c  { color: var(--node-c)  !important; }
+  .col-d  { color: var(--node-d)  !important; }
+
+  /* NETWORK CANVAS */
+  #networkCanvas {
+    width: 100%;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: block;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+  .btn.danger { border-color: var(--accent2); color: var(--accent2); }
+  .btn.danger:hover { background: var(--accent2); color: #fff; }
+  .btn.success { background: var(--green); color: #000; border-color: var(--green); font-weight: 600; }
+
+  /* RESULTS */
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .result-card:hover { border-color: var(--accent); }
+  .result-card.optimal { border-color: var(--green); }
+  .result-card.optimal .path-cost { color: var(--green); }
+  .result-card.selected { border-color: var(--accent); background: #1f1c14; }
+  .path-route {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    word-break: break-all;
+  }
+  .path-route .arrow { color: var(--muted); }
+  .path-breakdown {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .path-cost {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .optimal-tag {
+    display: inline-block;
+    background: var(--green);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    letter-spacing: 1px;
+    vertical-align: middle;
+  }
+
+  /* STAT ROW */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-box .val {
+    font-family: 'Space Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-box .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* TOGGLE */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .toggle-label { font-size: 14px; flex: 1; }
+  .toggle-sublabel { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    background: var(--border);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .slider:before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    left: 3px; bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  input:checked + .slider { background: var(--accent2); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
+  /* GREEDY STEPS */
+  .step-list { list-style: none; }
+  .step-list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { color: var(--text); line-height: 1.5; }
+  .step-pick { color: var(--green); font-weight: 600; }
+  .step-skip { color: var(--muted); text-decoration: line-through; }
+
+  /* PART 2 */
+  .part2-notice {
+    background: linear-gradient(135deg, #2a1a0a, #1e2330);
+    border: 1px solid var(--accent2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .part2-notice::before { content: '⚠'; font-size: 18px; }
+
+  /* FULL ROUTE TABLE */
+  .route-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+  }
+  .route-table th {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-align: left;
+  }
+  .route-table td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    background: var(--surface);
+  }
+  .route-table tr.optimal-row td { background: #0d1f14; color: var(--green); }
+  .route-table tr.optimal-row td:first-child { font-weight: 700; }
+
+  /* SCROLLABLE */
+  .scroll-box {
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* NODE COLORS in text */
+  .n-wh { color: var(--node-wh); font-weight: 700; }
+  .n-a  { color: var(--node-a);  font-weight: 700; }
+  .n-b  { color: var(--node-b);  font-weight: 700; }
+  .n-c  { color: var(--node-c);  font-weight: 700; }
+  .n-d  { color: var(--node-d);  font-weight: 700; }
+
+  /* FULL WIDTH SECTIONS */
+  .full-width {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  /* ANIMATION pulse */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .animating { animation: pulse 1s infinite; }
+
+  /* FOOTER */
+  footer {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  footer span { font-family: 'Space Mono', monospace; }
+
+  .info-box {
+    background: var(--surface);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--text); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* EVIDENCE SECTION */
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .evidence-grid { grid-template-columns: 1fr; }
+    .reflect-grid { grid-template-columns: 1fr; }
+  }
+  .evidence-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .evidence-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .evidence-svg {
+    width: 100%;
+    height: auto;
+    background: #11141c;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .note-block {
+    background: #14171f;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  .note-num {
+    display: inline-block;
+    color: var(--accent);
+    margin-right: 4px;
+  }
+  .note-line { color: var(--text); }
+  .note-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 10px 0;
+  }
+
+  /* REFLECTION SECTION */
+  .reflect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .reflect-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .reflect-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .reflect-icon { font-size: 18px; }
+  .reflect-card p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .reflect-card p strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Travelling <span>Salesman</span><br>Problem</h1>
+    <p>Networks Week 12 — Brute-force enumeration &amp; greedy heuristic</p>
+  </div>
+  <div>
+    <div class="badge">Nodes: WH · A · B · C · D &nbsp;|&nbsp; Start/End: WH</div>
+  </div>
+</header>
+
+<main id="mainGrid">
+
+  <!-- SECTION 0: Project Overview -->
+  <section class="full-width" style="border-bottom:1px solid var(--border)">
+    <div class="section-label">Section 1 — Project Overview</div>
+    <h2>What this page is about</h2>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:32px;">
+      <div style="font-size:14px;line-height:1.8;color:var(--text)">
+        <p style="margin-bottom:14px;">
+          This page documents my Week 12 Networks project on the <strong>Travelling Salesman Problem (TSP)</strong> —
+          a classic optimization challenge. The assignment came from a delivery-business scenario: a driver
+          must depart from a warehouse (<span class="n-wh">WH</span>), deliver packages to four towns
+          (<span class="n-a">A</span>, <span class="n-b">B</span>, <span class="n-c">C</span>, <span class="n-d">D</span>),
+          visit each exactly once, and return to <span class="n-wh">WH</span> — all while minimizing total
+          distance (and therefore fuel cost).
+        </p>
+        <p style="margin-bottom:14px;">
+          The core concept being demonstrated is <strong>combinatorial optimization through brute-force
+          enumeration</strong>: since there are only 5 nodes, all 24 possible round-trip routes can be listed,
+          their costs calculated, and the minimum identified directly. I also compare this against a
+          <strong>greedy "nearest neighbour" heuristic</strong>, which is faster but not always optimal.
+        </p>
+        <p>
+          This matters because real logistics networks are exactly this problem at scale — except with
+          hundreds or thousands of stops, brute force becomes impossible (factorial growth), so understanding
+          where the heuristic agrees with — or diverges from — the true optimum is the actual lesson.
+          The project also explores a constrained variant: what happens when one road
+          (<span class="n-c">C</span> ↔ <span class="n-d">D</span>) becomes unavailable.
+        </p>
+      </div>
+      <div class="info-box" style="margin-bottom:0;">
+        <strong>Quick facts</strong><br><br>
+        • 5 nodes total (WH + 4 towns)<br>
+        • 24 possible closed routes (4! permutations)<br>
+        • Optimal cost, all roads open: <strong style="color:var(--green)">25</strong><br>
+        • Optimal cost, C↔D blocked: <strong style="color:var(--green)">30</strong><br>
+        • 4 distinct routes tie for the optimum of 25<br>
+        • Greedy heuristic happens to match the optimum here
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: Distance Table -->
+  <section>
+    <div class="section-label">Section 2 — Demonstration</div>
+    <h2>Distance Matrix</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Symmetric distance table between warehouse (WH) and towns A–D.</p>
+    <table class="dist-table">
+      <thead>
+        <tr>
+          <th>From ↓ / To →</th>
+          <th class="col-wh">WH</th>
+          <th class="col-a">A</th>
+          <th class="col-b">B</th>
+          <th class="col-c">C</th>
+          <th class="col-d">D</th>
+        </tr>
+      </thead>
+      <tbody id="distTableBody"></tbody>
+    </table>
+    <div class="divider"></div>
+    <div class="info-box">
+      <strong>Problem:</strong> Find the minimum-cost Hamiltonian cycle — visit every node exactly once and return to WH. With 4 towns (excluding WH), there are <strong>(4−1)! / 2 = 12</strong> unique routes to check.
+    </div>
+  </section>
+
+  <!-- SECTION 2: Network Graph -->
+  <section>
+    <div class="section-label">Section 2 — Demonstration</div>
+    <h2>Network Map</h2>
+    <div class="controls">
+      <button class="btn active" id="btnShowAll" onclick="setMode('all')">All Edges</button>
+      <button class="btn" id="btnShowOptimal" onclick="setMode('optimal')">Optimal Path</button>
+      <button class="btn" id="btnShowPart2" onclick="setMode('part2')">Part 2 (C→D off)</button>
+    </div>
+    <canvas id="networkCanvas" width="480" height="320"></canvas>
+    <p id="canvasCaption" style="font-size:12px;color:var(--muted);margin-top:10px;font-family:'Space Mono',monospace;">
+      Showing all edges with weights
+    </p>
+  </section>
+
+  <!-- SECTION 3: All Routes Brute Force -->
+  <section>
+    <div class="section-label">Section 2 — Demonstration (cont.)</div>
+    <h2>All Possible Routes</h2>
+
+    <div class="stat-row" id="statsRow1"></div>
+
+    <div class="controls">
+      <button class="btn active" onclick="filterRoutes('all')" id="fAll">All (24)</button>
+      <button class="btn" onclick="filterRoutes('optimal')" id="fOpt">Optimal only</button>
+    </div>
+
+    <div class="scroll-box">
+      <table class="route-table" id="routeTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Route</th>
+            <th>Calculation</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody id="routeTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Greedy Heuristic -->
+  <section>
+    <div class="section-label">Section 2 — Demonstration (cont.)</div>
+    <h2>Nearest Neighbour Steps</h2>
+    <div class="info-box">
+      <strong>Strategy:</strong> At each step, pick the nearest unvisited node. Not guaranteed to find the global optimum, but fast and intuitive.
+    </div>
+    <ul class="step-list" id="greedySteps"></ul>
+    <div class="divider"></div>
+    <div id="greedyResult" style="font-size:13px;"></div>
+  </section>
+
+  <!-- SECTION 5: Part 2 — C→D Unavailable -->
+  <section style="grid-column: 1 / -1; border-right:none;">
+    <div class="section-label">Section 2 — Demonstration (cont.)</div>
+    <h2>Constraint Scenario: C → D Edge Removed</h2>
+
+    <div class="part2-notice">
+      The route between C and D is now <strong>unavailable</strong>. All paths using this edge must be eliminated.
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-wrap:wrap;">
+      <div>
+        <h3 style="font-size:15px;margin-bottom:14px;color:var(--muted);">Valid Routes Only</h3>
+        <div class="stat-row" id="statsRow2"></div>
+        <div class="scroll-box" style="max-height:280px">
+          <table class="route-table" id="routeTable2">
+            <thead>
+              <tr><th>#</th><th>Route</th><th>Calculation</th><th>Cost</th></tr>
+            </thead>
+            <tbody id="routeTableBody2"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;margin-bottom:14px;color:var(--muted);">Greedy Steps (C→D blocked)</h3>
+        <ul class="step-list" id="greedySteps2"></ul>
+        <div class="divider"></div>
+        <div id="greedyResult2" style="font-size:13px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: Optimal Path Detail -->
+  <section class="full-width">
+    <div class="section-label">Section 2 — Demonstration (cont.)</div>
+    <h2>All Optimal Routes at Minimum Cost</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" id="optimalCards"></div>
+  </section>
+
+  <!-- SECTION 7: Evidence -->
+  <section class="full-width">
+    <div class="section-label">Section 3 — Evidence</div>
+    <h2>Original Coursework</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;max-width:760px;">
+      This project began as handwritten work on graph paper: drawing the network as both a star layout
+      (WH connected to each town) and a complete graph (all pairwise distances), then manually testing
+      five candidate routes by hand before recognizing the brute-force pattern. Below is a digital
+      recreation of those original notes and calculations.
+    </p>
+
+    <div class="evidence-grid">
+      <div class="evidence-card">
+        <div class="evidence-title">Hand-drawn Network Sketches</div>
+        <div class="evidence-body">
+          <svg viewBox="0 0 380 220" class="evidence-svg">
+            <!-- Star layout -->
+            <text x="70" y="18" font-family="Space Mono" font-size="10" fill="#7a8399">Star layout</text>
+            <circle cx="70" cy="40" r="16" fill="none" stroke="#e8eaf0" stroke-width="1.5"/>
+            <text x="70" y="44" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#e8eaf0">WH</text>
+            <g stroke="#5a6275" stroke-width="1" fill="none">
+              <line x1="62" y1="54" x2="30" y2="95"/>
+              <line x1="70" y1="56" x2="70" y2="100"/>
+              <line x1="80" y1="54" x2="105" y2="95"/>
+              <line x1="84" y1="50" x2="150" y2="85"/>
+            </g>
+            <circle cx="25" cy="105" r="14" fill="none" stroke="#5b8af5" stroke-width="1.5"/>
+            <text x="25" y="109" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#5b8af5">A</text>
+            <circle cx="70" cy="112" r="14" fill="none" stroke="#3fcf8e" stroke-width="1.5"/>
+            <text x="70" y="116" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#3fcf8e">B</text>
+            <circle cx="112" cy="105" r="14" fill="none" stroke="#c97cf5" stroke-width="1.5"/>
+            <text x="112" y="109" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#c97cf5">C</text>
+            <circle cx="158" cy="92" r="14" fill="none" stroke="#e05c2a" stroke-width="1.5"/>
+            <text x="158" y="96" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#e05c2a">D</text>
+            <text x="48" y="30" font-family="Space Mono" font-size="9" fill="#7a8399">6</text>
+            <text x="68" y="78" font-family="Space Mono" font-size="9" fill="#7a8399">8</text>
+            <text x="92" y="30" font-family="Space Mono" font-size="9" fill="#7a8399">7</text>
+            <text x="120" y="22" font-family="Space Mono" font-size="9" fill="#7a8399">10</text>
+
+            <!-- Pentagon / complete graph layout -->
+            <text x="280" y="18" font-family="Space Mono" font-size="10" fill="#7a8399">Complete graph</text>
+            <circle cx="280" cy="35" r="14" fill="none" stroke="#f4a829" stroke-width="1.5"/>
+            <text x="280" y="39" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#f4a829">WH</text>
+            <circle cx="230" cy="90" r="13" fill="none" stroke="#5b8af5" stroke-width="1.5"/>
+            <text x="230" y="94" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#5b8af5">A</text>
+            <circle cx="330" cy="90" r="13" fill="none" stroke="#3fcf8e" stroke-width="1.5"/>
+            <text x="330" y="94" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#3fcf8e">B</text>
+            <circle cx="250" cy="160" r="13" fill="none" stroke="#c97cf5" stroke-width="1.5"/>
+            <text x="250" y="164" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#c97cf5">C</text>
+            <circle cx="310" cy="160" r="13" fill="none" stroke="#e05c2a" stroke-width="1.5"/>
+            <text x="310" y="164" text-anchor="middle" font-family="Space Grotesk" font-size="10" fill="#e05c2a">D</text>
+            <g stroke="#3a3f4d" stroke-width="1" fill="none">
+              <line x1="280" y1="48" x2="230" y2="79"/>
+              <line x1="280" y1="48" x2="330" y2="79"/>
+              <line x1="280" y1="48" x2="250" y2="149"/>
+              <line x1="280" y1="48" x2="310" y2="149"/>
+              <line x1="241" y1="99" x2="319" y2="99"/>
+              <line x1="237" y1="101" x2="247" y2="150"/>
+              <line x1="240" y1="102" x2="303" y2="155"/>
+              <line x1="323" y1="101" x2="313" y2="150"/>
+              <line x1="320" y1="102" x2="257" y2="155"/>
+              <line x1="263" y1="161" x2="297" y2="161"/>
+            </g>
+          </svg>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;">
+            The original notebook page drew the network twice: once as a star (WH spoking out to each town
+            with given distances), then as a complete graph / pentagon showing every pairwise distance
+            needed for the full distance matrix.
+          </p>
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-title">Manual Route Testing (Original Notes)</div>
+        <div class="evidence-body">
+          <div class="note-block">
+            <div class="note-line"><span class="note-num">①</span> WH→A→C→D-B-WH &nbsp; — &nbsp; 6+3+2+6+8 = <strong style="color:var(--green)">25</strong></div>
+            <div class="note-line"><span class="note-num">②</span> WH-B→D→C→A→WH &nbsp; — &nbsp; 8+6+2+3+6 = <strong style="color:var(--green)">25</strong></div>
+            <div class="note-line"><span class="note-num">③</span> WH→A-B-D-C-WH &nbsp; — &nbsp; 6+4+6+2+7 = <strong>25</strong></div>
+            <div class="note-line"><span class="note-num">④</span> WH→D-C-A-B-WH &nbsp; — &nbsp; 10+2+3+4+8 = <strong>27</strong></div>
+            <div class="note-line"><span class="note-num">⑤</span> WH→C-A-B-D-WH &nbsp; — &nbsp; 7+3+4+6+10 = <strong>30</strong></div>
+            <div class="note-divider"></div>
+            <div class="note-line" style="color:var(--accent2)">
+              <strong>Part 2 (C↔D unavailable):</strong><br>
+              WH→A-C-B-D-WH = 6+3+5+6+10 = <strong>30</strong>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;">
+            These five routes were tried by hand first. Routes ① and ② both reached <strong>25</strong> —
+            the same value the brute-force search above confirms as the global minimum, out of all 24
+            possible round trips. The Part 2 hand-calculation (30) also matches the constrained
+            brute-force result in Section 2.
+          </p>
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-title">Distance Table (Recreated from Coursework)</div>
+        <div class="evidence-body">
+          <table class="dist-table" style="font-size:12px;">
+            <thead>
+              <tr>
+                <th>To / From</th>
+                <th class="col-wh">WH</th>
+                <th class="col-a">A</th>
+                <th class="col-b">B</th>
+                <th class="col-c">C</th>
+                <th class="col-d">D</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="row-header col-wh">WH</td><td class="self">—</td><td>6</td><td>8</td><td>7</td><td>10</td></tr>
+              <tr><td class="row-header col-a">A</td><td>6</td><td class="self">—</td><td>4</td><td>3</td><td>7</td></tr>
+              <tr><td class="row-header col-b">B</td><td>8</td><td>4</td><td class="self">—</td><td>5</td><td>6</td></tr>
+              <tr><td class="row-header col-c">C</td><td>7</td><td>3</td><td>5</td><td class="self">—</td><td>2</td></tr>
+              <tr><td class="row-header col-d">D</td><td>10</td><td>7</td><td>6</td><td>2</td><td class="self">—</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;">
+            Transcribed directly from the original assignment's distance table — the same values used
+            throughout the interactive demo in Section 2.
+          </p>
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-title">Shortcut Notes &amp; Strategy</div>
+        <div class="evidence-body">
+          <div class="note-block">
+            <div class="note-line" style="margin-bottom:10px;"><strong style="color:var(--accent)">Shortcut tricks — choose smallest value at each step:</strong></div>
+            <div class="note-line"><span class="note-num">1</span> Start with WH → A(6) [smallest of 6,8,7,10]</div>
+            <div class="note-line"><span class="note-num">2</span> From A — visited: B(4), C(3), D(7) → pick C(3)</div>
+            <div class="note-line"><span class="note-num">3</span> From C — visited: B(5), D(2) → pick D, but only one option remains</div>
+            <div class="note-line"><span class="note-num">4</span> From D — visited: B(6) → only option</div>
+            <div class="note-line"><span class="note-num">5</span> Return WH from B</div>
+            <div class="note-divider"></div>
+            <div class="note-line" style="color:var(--muted);font-size:12px;">
+              This is exactly the <strong>nearest-neighbour greedy heuristic</strong> implemented and
+              visualized in Section 2 — and in this case it lands on the true optimum (25).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: What Did I Learn -->
+  <section class="full-width">
+    <div class="section-label">Section 4 — What Did I Learn?</div>
+    <h2>Reflection</h2>
+    <div class="reflect-grid">
+      <div class="reflect-card">
+        <div class="reflect-title"><span class="reflect-icon">🧠</span> Knowledge</div>
+        <p>
+          I learned what the Travelling Salesman Problem actually is: finding the minimum-cost Hamiltonian
+          cycle through a weighted graph. With only 4 towns plus a warehouse, there are
+          <strong>(n−1)!/2 = 12</strong> structurally unique routes (24 if direction is counted separately),
+          which is small enough to brute-force by hand. I also learned the difference between an
+          <strong>exact algorithm</strong> (brute force — guaranteed optimal, but factorial time) and a
+          <strong>heuristic</strong> (nearest neighbour — fast, but only sometimes optimal).
+        </p>
+      </div>
+      <div class="reflect-card">
+        <div class="reflect-title"><span class="reflect-icon">🛠️</span> Skills</div>
+        <p>
+          Practiced systematic enumeration and arithmetic checking by hand before automating it.
+          Built a distance matrix from a network diagram and back again. Practiced
+          <strong>optimization thinking</strong> — comparing multiple candidate solutions against
+          a baseline rather than trusting the first answer found. Also practiced representing the
+          same network in two different visual forms (star graph vs. complete graph) to check
+          my own distance values for consistency.
+        </p>
+      </div>
+      <div class="reflect-card">
+        <div class="reflect-title"><span class="reflect-icon">💡</span> Reflection</div>
+        <p>
+          The hardest part was keeping track of which routes I'd already tried by hand — duplicates and
+          reversed routes (e.g. WH→A→C→D→B→WH vs. WH→B→D→C→A→WH) have the <em>same cost</em>
+          since the graph is symmetric, which was surprising until I realized a route and its reverse
+          are always identical in cost. In the real world, this scale of problem is what delivery
+          companies like UPS or FedEx solve constantly — except with thousands of stops, where brute
+          force is impossible and heuristics (or more advanced methods like genetic algorithms or
+          branch-and-bound) become necessary. The constrained scenario (Part 2) also showed how a single
+          road closure can meaningfully raise total cost — from 25 to 30, a 20% increase — which mirrors
+          real supply-chain disruptions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>TSP — Warehouse Delivery Network</span>
+    <span>Brute-force: O(n!) &nbsp;·&nbsp; Greedy: O(n²) &nbsp;·&nbsp; Nodes: 5</span>
+    <span style="color:var(--accent)">Optimal Cost (full) = 25 &nbsp;|&nbsp; With C→D blocked = 30</span>
+  </footer>
+
+</main>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const NODES = ['WH','A','B','C','D'];
+const NODE_COLORS = { WH:'#f4a829', A:'#5b8af5', B:'#3fcf8e', C:'#c97cf5', D:'#e05c2a' };
+
+const DIST = {
+  WH:{ WH:0,  A:6,  B:8,  C:7,  D:10 },
+  A: { WH:6,  A:0,  B:4,  C:3,  D:7  },
+  B: { WH:8,  A:4,  B:0,  C:5,  D:6  },
+  C: { WH:7,  A:3,  B:5,  C:0,  D:2  },
+  D: { WH:10, A:7,  B:6,  C:2,  D:0  }
+};
+
+// ─── PERMUTATIONS ─────────────────────────────────────────────────────────────
+function permutations(arr) {
+  if (arr.length <= 1) return [arr];
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    const rest = [...arr.slice(0,i), ...arr.slice(i+1)];
+    for (const p of permutations(rest)) result.push([arr[i], ...p]);
+  }
+  return result;
+}
+
+function routeCost(route) {
+  let cost = 0;
+  for (let i = 0; i < route.length - 1; i++) cost += DIST[route[i]][route[i+1]];
+  return cost;
+}
+
+function routeCalc(route) {
+  const parts = [];
+  for (let i = 0; i < route.length - 1; i++)
+    parts.push(`${DIST[route[i]][route[i+1]]}`);
+  return parts.join(' + ');
+}
+
+function hasEdge(route, a, b) {
+  for (let i = 0; i < route.length - 1; i++)
+    if ((route[i]===a&&route[i+1]===b)||(route[i]===b&&route[i+1]===a)) return true;
+  return false;
+}
+
+// Generate all routes starting and ending at WH
+const towns = ['A','B','C','D'];
+const perms = permutations(towns);
+const allRoutes = perms.map(p => {
+  const route = ['WH', ...p, 'WH'];
+  return { route, cost: routeCost(route), calc: routeCalc(route) };
+}).sort((a,b) => a.cost - b.cost);
+
+const minCost = allRoutes[0].cost;
+const optimalRoutes = allRoutes.filter(r => r.cost === minCost);
+
+// Part 2: block C-D edge
+const part2Routes = allRoutes.filter(r => !hasEdge(r.route, 'C', 'D'));
+const minCost2 = part2Routes[0]?.cost ?? Infinity;
+const optimalRoutes2 = part2Routes.filter(r => r.cost === minCost2);
+
+// ─── DISTANCE TABLE ────────────────────────────────────────────────────────────
+(function buildDistTable() {
+  const tbody = document.getElementById('distTableBody');
+  NODES.forEach(from => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="row-header" style="color:${NODE_COLORS[from]}">${from}</td>` +
+      NODES.map(to => {
+        if (from === to) return `<td class="self">—</td>`;
+        return `<td>${DIST[from][to]}</td>`;
+      }).join('');
+    tbody.appendChild(tr);
+  });
+})();
+
+// ─── ROUTE TABLE ──────────────────────────────────────────────────────────────
+function buildRouteTable(routes, tbodyId, optCost) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  routes.forEach((r, i) => {
+    const isOpt = r.cost === optCost;
+    const tr = document.createElement('tr');
+    if (isOpt) tr.className = 'optimal-row';
+    const routeStr = r.route.map(n =>
+      `<span style="color:${NODE_COLORS[n]};font-weight:700">${n}</span>`
+    ).join('<span style="color:#7a8399"> → </span>');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td style="white-space:nowrap">${routeStr}</td>
+      <td>${r.calc} = <strong>${r.cost}</strong></td>
+      <td style="font-weight:700;color:${isOpt?'#3fcf8e':'#e8eaf0'}">${r.cost}${isOpt?' ★':''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+buildRouteTable(allRoutes, 'routeTableBody', minCost);
+buildRouteTable(part2Routes, 'routeTableBody2', minCost2);
+
+let currentFilter = 'all';
+function filterRoutes(f) {
+  currentFilter = f;
+  ['fAll','fOpt'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(f==='all'?'fAll':'fOpt').classList.add('active');
+  const routes = f === 'all' ? allRoutes : optimalRoutes;
+  buildRouteTable(routes, 'routeTableBody', minCost);
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function buildStats(containerId, routes, optCost) {
+  const container = document.getElementById(containerId);
+  const unique = new Set(routes.map(r=>r.cost)).size;
+  container.innerHTML = `
+    <div class="stat-box"><div class="val">${routes.length}</div><div class="lbl">Total Routes</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--green)">${optCost}</div><div class="lbl">Min Cost</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--blue)">${routes.filter(r=>r.cost===optCost).length}</div><div class="lbl">Optimal Paths</div></div>
+  `;
+}
+
+buildStats('statsRow1', allRoutes, minCost);
+buildStats('statsRow2', part2Routes, minCost2);
+
+// ─── GREEDY ───────────────────────────────────────────────────────────────────
+function greedyTSP(blocked = false) {
+  const steps = [];
+  const visited = new Set(['WH']);
+  let current = 'WH';
+  let total = 0;
+  const path = ['WH'];
+  const remaining = ['A','B','C','D'];
+
+  while (remaining.length > 0) {
+    const candidates = remaining
+      .filter(n => {
+        if (!blocked) return true;
+        // block C-D in both directions
+        if ((current==='C'&&n==='D')||(current==='D'&&n==='C')) return false;
+        return true;
+      })
+      .map(n => ({ n, d: DIST[current][n] }))
+      .sort((a,b) => a.d - b.d);
+
+    const skipped = remaining
+      .filter(n => {
+        if (!blocked) return false;
+        if ((current==='C'&&n==='D')||(current==='D'&&n==='C')) return true;
+        return false;
+      });
+
+    const pick = candidates[0];
+    steps.push({
+      from: current, to: pick.n, dist: pick.d,
+      choices: [...candidates],
+      skipped,
+      remaining: [...remaining]
+    });
+
+    visited.add(pick.n);
+    remaining.splice(remaining.indexOf(pick.n), 1);
+    total += pick.d;
+    current = pick.n;
+    path.push(pick.n);
+  }
+
+  // return to WH
+  const finalDist = DIST[current]['WH'];
+  total += finalDist;
+  path.push('WH');
+
+  return { steps, path, total, finalDist, lastNode: current };
+}
+
+function renderGreedy(result, stepsId, resultId) {
+  const ul = document.getElementById(stepsId);
+  ul.innerHTML = '';
+  result.steps.forEach((s, i) => {
+    const li = document.createElement('li');
+    const choicesStr = s.choices.map((c,j) =>
+      j===0
+        ? `<span class="step-pick">${c.n}(${c.d})</span>`
+        : `<span style="color:var(--muted)">${c.n}(${c.d})</span>`
+    ).join(', ');
+    li.innerHTML = `
+      <span class="step-num">${i+1}</span>
+      <div class="step-text">
+        From <span style="color:${NODE_COLORS[s.from]};font-weight:700">${s.from}</span>
+        — options: ${choicesStr}
+        ${s.skipped.length?`<br><span style="font-size:11px;color:var(--accent2)">⚠ Skipped: ${s.skipped.join(', ')} (C→D blocked)</span>`:''}
+        <br>→ Pick <span class="step-pick">${s.to}</span> (distance ${s.dist})
+      </div>
+    `;
+    ul.appendChild(li);
+  });
+
+  // final step
+  const li2 = document.createElement('li');
+  li2.innerHTML = `
+    <span class="step-num">${result.steps.length+1}</span>
+    <div class="step-text">
+      Return to <span style="color:var(--node-wh);font-weight:700">WH</span> from
+      <span style="color:${NODE_COLORS[result.lastNode]};font-weight:700">${result.lastNode}</span>
+      (distance ${result.finalDist})
+    </div>
+  `;
+  ul.appendChild(li2);
+
+  const div = document.getElementById(resultId);
+  const routeStr = result.path.map(n => `<span style="color:${NODE_COLORS[n]};font-weight:700">${n}</span>`).join(' → ');
+  div.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px">
+      <div style="font-size:11px;letter-spacing:1px;color:var(--muted);margin-bottom:8px;font-family:'Space Mono',monospace">GREEDY RESULT</div>
+      <div style="font-family:'Space Mono',monospace;font-size:13px;margin-bottom:6px">${routeStr}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--accent)">${result.total}</div>
+    </div>
+  `;
+}
+
+const greedy1 = greedyTSP(false);
+const greedy2 = greedyTSP(true);
+renderGreedy(greedy1, 'greedySteps', 'greedyResult');
+renderGreedy(greedy2, 'greedySteps2', 'greedyResult2');
+
+// ─── OPTIMAL CARDS ────────────────────────────────────────────────────────────
+(function buildOptimalCards() {
+  const container = document.getElementById('optimalCards');
+  const part1Opts = optimalRoutes;
+  const part2Opts = optimalRoutes2;
+  const all = [
+    { label:'Part 1 — All Edges Available', routes: part1Opts, cost: minCost },
+    { label:'Part 2 — C→D Blocked', routes: part2Opts, cost: minCost2 }
+  ];
+  all.forEach(group => {
+    const div = document.createElement('div');
+    div.innerHTML = `<h3 style="font-size:14px;color:var(--muted);margin-bottom:12px;font-family:'Space Mono',monospace">${group.label}</h3>`;
+    group.routes.forEach((r, i) => {
+      const routeStr = r.route.map(n =>
+        `<span style="color:${NODE_COLORS[n]};font-weight:700">${n}</span>`
+      ).join('<span style="color:#7a8399"> → </span>');
+      const card = document.createElement('div');
+      card.className = 'result-card optimal';
+      card.innerHTML = `
+        <div class="path-route">${routeStr}</div>
+        <div class="path-breakdown">${r.calc}</div>
+        <span class="path-cost">${r.cost}</span>
+        <span class="optimal-tag">OPTIMAL</span>
+      `;
+      div.appendChild(card);
+    });
+    container.appendChild(div);
+  });
+})();
+
+// ─── CANVAS ───────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('networkCanvas');
+const ctx = canvas.getContext('2d');
+
+// Node positions (normalized to canvas)
+const W = 480, H = 320;
+const positions = {
+  WH: [W/2, 50],
+  A:  [80,  180],
+  B:  [W/2, 200],
+  C:  [120, 290],
+  D:  [380, 270]
+};
+
+let canvasMode = 'all';
+let highlightPath = null;
+
+function setMode(mode) {
+  canvasMode = mode;
+  ['btnShowAll','btnShowOptimal','btnShowPart2'].forEach(id =>
+    document.getElementById(id).classList.remove('active')
+  );
+  if (mode==='all') {
+    document.getElementById('btnShowAll').classList.add('active');
+    highlightPath = null;
+    document.getElementById('canvasCaption').textContent = 'Showing all edges with weights';
+  } else if (mode==='optimal') {
+    document.getElementById('btnShowOptimal').classList.add('active');
+    highlightPath = optimalRoutes[0].route;
+    document.getElementById('canvasCaption').textContent =
+      `Optimal path: ${optimalRoutes[0].route.join(' → ')} (cost ${minCost})`;
+  } else {
+    document.getElementById('btnShowPart2').classList.add('active');
+    highlightPath = optimalRoutes2[0].route;
+    document.getElementById('canvasCaption').textContent =
+      `Part 2 optimal: ${optimalRoutes2[0].route.join(' → ')} (cost ${minCost2}) — C→D blocked`;
+  }
+  drawNetwork();
+}
+
+function drawNetwork() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw edges
+  const drawn = new Set();
+  NODES.forEach(a => {
+    NODES.forEach(b => {
+      if (a === b) return;
+      const key = [a,b].sort().join('-');
+      if (drawn.has(key)) return;
+      drawn.add(key);
+
+      const [x1,y1] = positions[a];
+      const [x2,y2] = positions[b];
+
+      // Check if blocked in part2 mode
+      const blocked = canvasMode==='part2' && ((a==='C'&&b==='D')||(a==='D'&&b==='C'));
+      // Check if on highlight path
+      const onPath = highlightPath && hasEdge(highlightPath, a, b);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+
+      if (blocked) {
+        ctx.strokeStyle = '#3a1a1a';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+      } else if (onPath) {
+        ctx.strokeStyle = '#f4a829';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([]);
+      } else if (highlightPath) {
+        ctx.strokeStyle = '#2a3040';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+      } else {
+        ctx.strokeStyle = '#2a3040';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Weight label
+      const mx = (x1+x2)/2;
+      const my = (y1+y2)/2;
+      const dist = DIST[a][b];
+
+      if (!blocked) {
+        ctx.fillStyle = onPath ? '#f4a829' : '#4a5568';
+        ctx.font = onPath ? 'bold 12px Space Mono' : '11px Space Mono';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        // Small bg
+        const tw = ctx.measureText(dist).width + 8;
+        ctx.fillStyle = '#0d0f14';
+        ctx.fillRect(mx - tw/2, my - 9, tw, 18);
+        ctx.fillStyle = onPath ? '#f4a829' : '#7a8399';
+        ctx.fillText(dist, mx, my);
+      } else {
+        ctx.fillStyle = '#3a1a1a';
+        ctx.font = '10px Space Mono';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('✕', (x1+x2)/2, (y1+y2)/2);
+      }
+    });
+  });
+
+  // Draw nodes
+  NODES.forEach(n => {
+    const [x, y] = positions[n];
+    const onPath = highlightPath && highlightPath.includes(n);
+    const r = n === 'WH' ? 26 : 20;
+
+    // Glow
+    if (onPath) {
+      ctx.beginPath();
+      ctx.arc(x, y, r + 6, 0, Math.PI*2);
+      const grad = ctx.createRadialGradient(x,y,r,x,y,r+10);
+      grad.addColorStop(0, NODE_COLORS[n] + '44');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // Circle
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = onPath || !highlightPath ? NODE_COLORS[n] : NODE_COLORS[n] + '44';
+    ctx.fill();
+    ctx.strokeStyle = '#0d0f14';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = onPath || !highlightPath ? '#000' : '#00000066';
+    ctx.font = `bold ${n==='WH'?13:14}px Space Grotesk`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n, x, y);
+  });
+
+  // Arrow on path
+  if (highlightPath) {
+    for (let i = 0; i < highlightPath.length - 1; i++) {
+      const a = highlightPath[i], b = highlightPath[i+1];
+      const [x1,y1] = positions[a];
+      const [x2,y2] = positions[b];
+      const dx = x2-x1, dy = y2-y1;
+      const len = Math.sqrt(dx*dx+dy*dy);
+      const nr = (b==='WH'?26:20) + 4;
+      const ex = x2 - (dx/len)*nr;
+      const ey = y2 - (dy/len)*nr;
+      const ang = Math.atan2(dy, dx);
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - 10*Math.cos(ang-0.4), ey - 10*Math.sin(ang-0.4));
+      ctx.lineTo(ex - 10*Math.cos(ang+0.4), ey - 10*Math.sin(ang+0.4));
+      ctx.closePath();
+      ctx.fillStyle = '#f4a829';
+      ctx.fill();
+    }
+  }
+}
+
+drawNetwork();
+</script>
+</body>
+</html>
