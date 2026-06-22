@@ -84,7 +84,25 @@
     display:flex;gap:3.5rem;margin-top:4rem;flex-wrap:wrap;
   }
   .meta-metric{display:flex;flex-direction:column;gap:0.3rem}
-  .meta-metric .m-val{\n    font-family:var(--font-display);font-size:2.4rem;\n    font-weight:700;color:#fff;line-height:1;\n  }\n  .meta-metric .m-lbl{\n    font-family:var(--font-mono);font-size:0.65rem;\n    color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;\n  }\n\n  .section{\n    max-width:1200px;margin:0 auto;padding:5.5rem 2rem;\n    border-top:1px solid var(--slate2);position:relative;z-index:1;\n  }\n  .section-eyebrow{\n    font-family:var(--font-mono);font-size:0.68rem;\n    color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;\n    margin-bottom:0.8rem;\n  }\n  .section h2{\n    font-family:var(--font-display);font-size:2.1rem;font-weight:700;\n    color:#fff;letter-spacing:-0.02em;margin-bottom:1.75rem;\n  }\n\n  .card{\n    background:var(--slate);border:1px solid var(--slate2);\n    border-radius:14px;padding:2.2rem;margin-bottom:1.5rem;\n  }\n  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.75rem}\n\n  .engine-layout{\n    display:grid;grid-template-columns:1fr 380px;gap:2rem;\n    align-items:start;margin-top:2.2rem;\n  }\n  @media (max-width:960px) {\n    .engine-layout { grid-template-columns: 1fr; }\n  }\n\n  .canvas-panel{\n    background:#050711;border:1px solid var(--slate2);\n    border-radius:16px;padding:1.75rem;min-height:580px;\n    display:flex;flex-direction:column;position:relative;\n  }\n  .canvas-header{\n    display:flex;justify-content:space-between;align-items:center;\n    border-bottom:1px solid var(--slate2);padding-bottom:1.1rem;\n    margin-bottom:1.1rem;flex-wrap:wrap;gap:1rem;\n  }\n  .btn-cluster{display:flex;gap:0.6rem}\n  .btn{\n    font-family:var(--font-body);font-size:0.82rem;font-weight:600;\n    padding:0.55rem 1.1rem;border:none;border-radius:6px;\n    cursor:pointer;transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  }\n  .btn-primary{background:var(--cyan);color:#000}\n  .btn-primary:hover{background:#33ebff;box-shadow:0 0 14px rgba(0,229,255,0.4)}\n  .btn-primary:disabled{background:var(--slate3);color:var(--muted);cursor:not-allowed;box-shadow:none}\n  .btn-secondary{background:var(--slate2);color:var(--ghost);border:1px solid var(--slate3)}\n  .btn-secondary:hover{background:var(--slate3)}\n  .btn-accent{background:var(--amber);color:#000}\n  .btn-accent:hover{background:#ffc233}\n\n  .tree-viewport{\n    flex:1;width:100%;height:100%;min-height:480px;\n  }\n  .tree-viewport svg{width:100%;height:100%}\n\n  .sidebar-panel{\n    display:flex;flex-direction:column;gap:1.5rem;\n  }\n  .monitor-box{\n    background:var(--slate);border:1px solid var(--slate2);\n    border-radius:14px;padding:1.6rem;\n  }\n  .monitor-title{\n    font-family:var(--font-display);font-size:1.05rem;font-weight:600;\n    color:#fff;margin-bottom:1.1rem;display:flex;align-items:center;gap:0.5rem;\n  }\n  .matrix-grid{\n    display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;\n  }\n  .matrix-cell{\n    background:rgba(5,7,17,0.5);border:1px solid var(--slate2);\n    border-radius:10px;padding:0.85rem;\n  }\n  .matrix-cell .cell-val{\n    font-family:var(--font-mono);font-size:1.15rem;font-weight:700;\n    color:var(--cyan);margin-bottom:0.2rem;\n  }\n  .matrix-cell .cell-lbl{\n    font-size:0.65rem;color:var(--muted);text-transform:uppercase;\n    letter-spacing:0.06em;\n  }\n\n  .log-console{\n    background:#050711;border:1px solid var(--slate2);\n    border-radius:10px;padding:0.85rem;font-family:var(--font-mono);\n    font-size:0.75rem;height:165px;overflow-y:auto;\n    display:flex;flex-direction:column;gap:0.45rem;\n  }\n  .log-row{display:flex;gap:0.5rem;color:var(--muted)}\n  .log-row .log-node{color:var(--amber)}\n  .log-row.success{color:var(--green)}\n  .log-row.fail{color:var(--red)}\n\n  .table-wrapper{\n    width:100%;overflow-x:auto;margin:1.75rem 0;\n    border:1px solid var(--slate2);border-radius:10px;\n  }\n  .data-matrix{\n    width:100%;border-collapse:collapse;font-size:0.88rem;text-align:left;\n  }\n  .data-matrix th{\n    background:var(--slate2);color:var(--ghost);padding:0.85rem 1.1rem;\n    font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;\n    letter-spacing:0.06em;\n  }\n  .data-matrix td{\n    padding:0.85rem 1.1rem;border-bottom:1px solid var(--slate2);color:var(--muted);\n  }\n  .data-matrix tr:last-child td{border-bottom:none}\n  .data-matrix tr:hover td{color:#fff;background:rgba(255,255,255,0.015)}\n  .highlight-row td{color:var(--cyan);background:rgba(0,230,255,0.02)}\n\n  .formula-banner{\n    background:rgba(213,0,249,0.02);border-left:3px solid var(--purple);\n    padding:1.1rem 1.6rem;font-family:var(--font-mono);font-size:0.88rem;\n    color:var(--ghost);margin:1.75rem 0;border-radius:0 10px 10px 0;\n  }\n\n  .modal-mask{\n    position:fixed;inset:0;background:rgba(3,5,10,0.85);\n    backdrop-filter:blur(6px);z-index:1000;\n    display:flex;align-items:center;justify-content:center;\n    opacity:0;pointer-events:none;transition:opacity 0.25s ease;\n  }\n  .modal-mask.show{opacity:1;pointer-events:auto}\n  .modal-frame{\n    background:var(--slate);border:1px solid var(--slate3);\n    border-radius:18px;width:92%;max-width:550px;\n    padding:2.2rem;box-shadow:0 28px 56px rgba(0,0,0,0.6);\n    transform:translateY(12px);transition:transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);\n  }\n  .modal-mask.show .modal-frame{transform:translateY(0)}\n  .modal-title{\n    font-family:var(--font-display);font-size:1.25rem;font-weight:700;\n    color:#fff;margin-bottom:1.1rem;padding-bottom:0.85rem;\n    border-bottom:1px solid var(--slate2);\n  }\n  .modal-body{\n    font-size:0.9rem;color:var(--muted);white-space:pre-wrap;\n    background:#050711;padding:1.1rem;border-radius:10px;\n    font-family:var(--font-mono);max-height:310px;overflow-y:auto;\n  }\n\n  .evidence-toggle-container {\n    margin-top: 1.75rem;\n  }\n  .evidence-image-wrapper {\n    display: none;\n    margin-top: 1.75rem;\n    border: 1px dashed var(--slate3);\n    background: rgba(5, 7, 17, 0.6);\n    padding: 1.25rem;\n    border-radius: 14px;\n    text-align: center;\n  }\n  .evidence-image-wrapper img {\n    max-width: 100%;\n    height: auto;\n    border-radius: 10px;\n    box-shadow: 0 18px 45px rgba(0,0,0,0.65);\n  }\n\n  footer{\n    padding:3.5rem 2rem;text-align:center;\n    font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);\n    border-top:1px solid var(--slate2);\n  }\n\n  .node-group{cursor:pointer}\n  .node-circle{transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1)}\n  .node-group:hover .node-circle{filter:brightness(1.25);r:21px}\n  .tree-edge{\n    stroke-dasharray:8;stroke-dashoffset:100;\n    animation:dashDraw 1.6s linear infinite;\n  }\n  @keyframes dashDraw {\n    to { stroke-dashoffset: 0; }\n  }\n</style>
+  .meta-metric .m-val{
+    font-family:var(--font-display);font-size:2.4rem;
+    font-weight:700;color:#fff;line-height:1;
+  }
+  .meta-metric .m-lbl{
+    font-family:var(--font-mono);font-size:0.65rem;
+    color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;
+  }
+
+  .section{
+    max-width:1200px;margin:0 auto;padding:5.5rem 2rem;
+    border-top:1px solid var(--slate2);position:relative;z-index:1;
+  }
+  .section-eyebrow{
+    font-family:var(--font-mono);font-size:0.68rem;
+    color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;
+    margin-bottom:0.8rem;
+  }
+  .section h2{\n    font-family:var(--font-display);font-size:2.1rem;font-weight:700;\n    color:#fff;letter-spacing:-0.02em;margin-bottom:1.75rem;\n  }\n\n  .card{\n    background:var(--slate);border:1px solid var(--slate2);\n    border-radius:14px;padding:2.2rem;margin-bottom:1.5rem;\n  }\n  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.75rem}\n\n  .engine-layout{\n    display:grid;grid-template-columns:1fr 380px;gap:2rem;\n    align-items:start;margin-top:2.2rem;\n  }\n  @media (max-width:960px) {\n    .engine-layout { grid-template-columns: 1fr; }\n  }\n\n  .canvas-panel{\n    background:#050711;border:1px solid var(--slate2);\n    border-radius:16px;padding:1.75rem;min-height:580px;\n    display:flex;flex-direction:column;position:relative;\n  }\n  .canvas-header{\n    display:flex;justify-content:space-between;align-items:center;\n    border-bottom:1px solid var(--slate2);padding-bottom:1.1rem;\n    margin-bottom:1.1rem;flex-wrap:wrap;gap:1rem;\n  }\n  .btn-cluster{display:flex;gap:0.6rem}\n  .btn{\n    font-family:var(--font-body);font-size:0.82rem;font-weight:600;\n    padding:0.55rem 1.1rem;border:none;border-radius:6px;\n    cursor:pointer;transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  }\n  .btn-primary{background:var(--cyan);color:#000}\n  .btn-primary:hover{background:#33ebff;box-shadow:0 0 14px rgba(0,229,255,0.4)}\n  .btn-primary:disabled{background:var(--slate3);color:var(--muted);cursor:not-allowed;box-shadow:none}\n  .btn-secondary{background:var(--slate2);color:var(--ghost);border:1px solid var(--slate3)}\n  .btn-secondary:hover{background:var(--slate3)}\n  .btn-accent{background:var(--amber);color:#000}\n  .btn-accent:hover{background:#ffc233}\n\n  .tree-viewport{\n    flex:1;width:100%;height:100%;min-height:480px;\n  }\n  .tree-viewport svg{width:100%;height:100%}\n\n  .sidebar-panel{\n    display:flex;flex-direction:column;gap:1.5rem;\n  }\n  .monitor-box{\n    background:var(--slate);border:1px solid var(--slate2);\n    border-radius:14px;padding:1.6rem;\n  }\n  .monitor-title{\n    font-family:var(--font-display);font-size:1.05rem;font-weight:600;\n    color:#fff;margin-bottom:1.1rem;display:flex;align-items:center;gap:0.5rem;\n  }\n  .matrix-grid{\n    display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;\n  }\n  .matrix-cell{\n    background:rgba(5,7,17,0.5);border:1px solid var(--slate2);\n    border-radius:10px;padding:0.85rem;\n  }\n  .matrix-cell .cell-val{\n    font-family:var(--font-mono);font-size:1.15rem;font-weight:700;\n    color:var(--cyan);margin-bottom:0.2rem;\n  }\n  .matrix-cell .cell-lbl{\n    font-size:0.65rem;color:var(--muted);text-transform:uppercase;\n    letter-spacing:0.06em;\n  }\n\n  .log-console{\n    background:#050711;border:1px solid var(--slate2);\n    border-radius:10px;padding:0.85rem;font-family:var(--font-mono);\n    font-size:0.75rem;height:165px;overflow-y:auto;\n    display:flex;flex-direction:column;gap:0.45rem;\n  }\n  .log-row{display:flex;gap:0.5rem;color:var(--muted)}\n  .log-row .log-node{color:var(--amber)}\n  .log-row.success{color:var(--green)}\n  .log-row.fail{color:var(--red)}\n\n  .table-wrapper{\n    width:100%;overflow-x:auto;margin:1.75rem 0;\n    border:1px solid var(--slate2);border-radius:10px;\n  }\n  .data-matrix{\n    width:100%;border-collapse:collapse;font-size:0.88rem;text-align:left;\n  }\n  .data-matrix th{\n    background:var(--slate2);color:var(--ghost);padding:0.85rem 1.1rem;\n    font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;\n    letter-spacing:0.06em;\n  }\n  .data-matrix td{\n    padding:0.85rem 1.1rem;border-bottom:1px solid var(--slate2);color:var(--muted);\n  }\n  .data-matrix tr:last-child td{border-bottom:none}\n  .data-matrix tr:hover td{color:#fff;background:rgba(255,255,255,0.015)}\n  .highlight-row td{color:var(--cyan);background:rgba(0,230,255,0.02)}\n\n  .formula-banner{\n    background:rgba(213,0,249,0.02);border-left:3px solid var(--purple);\n    padding:1.1rem 1.6rem;font-family:var(--font-mono);font-size:0.88rem;\n    color:var(--ghost);margin:1.75rem 0;border-radius:0 10px 10px 0;\n  }\n\n  .modal-mask{\n    position:fixed;inset:0;background:rgba(3,5,10,0.85);\n    backdrop-filter:blur(6px);z-index:1000;\n    display:flex;align-items:center;justify-content:center;\n    opacity:0;pointer-events:none;transition:opacity 0.25s ease;\n  }\n  .modal-mask.show{opacity:1;pointer-events:auto}\n  .modal-frame{\n    background:var(--slate);border:1px solid var(--slate3);\n    border-radius:18px;width:92%;max-width:550px;\n    padding:2.2rem;box-shadow:0 28px 56px rgba(0,0,0,0.6);\n    transform:translateY(12px);transition:transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);\n  }\n  .modal-mask.show .modal-frame{transform:translateY(0)}\n  .modal-title{\n    font-family:var(--font-display);font-size:1.25rem;font-weight:700;\n    color:#fff;margin-bottom:1.1rem;padding-bottom:0.85rem;\n    border-bottom:1px solid var(--slate2);\n  }\n  .modal-body{\n    font-size:0.9rem;color:var(--muted);white-space:pre-wrap;\n    background:#050711;padding:1.1rem;border-radius:10px;\n    font-family:var(--font-mono);max-height:310px;overflow-y:auto;\n  }\n\n  .evidence-toggle-container {\n    margin-top: 1.75rem;\n  }\n  .evidence-image-wrapper {\n    display: none;\n    margin-top: 1.75rem;\n    border: 1px dashed var(--slate3);\n    background: rgba(5, 7, 17, 0.6);\n    padding: 1.25rem;\n    border-radius: 14px;\n    text-align: center;\n  }\n  .evidence-image-wrapper img {\n    max-width: 100%;\n    height: auto;\n    border-radius: 10px;\n    box-shadow: 0 18px 45px rgba(0,0,0,0.65);\n  }\n\n  footer{\n    padding:3.5rem 2rem;text-align:center;\n    font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);\n    border-top:1px solid var(--slate2);\n  }\n\n  .node-group{cursor:pointer}\n  .node-circle{transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1)}\n  .node-group:hover .node-circle{filter:brightness(1.25);r:21px}\n  .tree-edge{\n    stroke-dasharray:8;stroke-dashoffset:100;\n    animation:dashDraw 1.6s linear infinite;\n  }\n  @keyframes dashDraw {\n    to { stroke-dashoffset: 0; }\n  }\n</style>
 </head>
 <body>
 
@@ -203,15 +221,6 @@
       </tbody>
     </table>
   </div>
-
-  <div class="evidence-toggle-container">
-    <button class="btn btn-accent" style="display:inline-flex; align-items:center; gap:0.5rem;" onclick="toggleEvidenceImageState()">
-      📷 View Handwritten Calculations
-    </button>
-    <div class="evidence-image-wrapper" id="evidenceImageWrapper">
-      <img src="IMG_5947.jpg" alt="Handwritten Branch and Bound Tree Calculation Matrix"/>
-    </div>
-  </div>
 </section>
 
 <section class="section" id="reflection">
@@ -242,7 +251,7 @@
 
 <script>
 const ENGINE_NODES_DATA_REGISTRY = [
-  {id:0, x:400, y:60,  parent:null, label:'',       bound:119.0, type:'root',     title:'Node 0: Strategic Allocation Root', body:'Continuous Relaxation Solutions:\nx₂=1.0, x₁=1.0, x₅=1.0, x₄=1.0, x₃=0.25\nTotal Capital: $15.0M\nBound Evaluation: 119.00\nExecution Step: Branch initiated on non-integer asset index variable x₃.'},
+  {id:0, x:400, y:60,  parent:null, label:'',       bound:119.0, type:'root',   title:'Node 0: Strategic Allocation Root', body:'Continuous Relaxation Solutions:\nx₂=1.0, x₁=1.0, x₅=1.0, x₄=1.0, x₃=0.25\nTotal Capital: $15.0M\nBound Evaluation: 119.00\nExecution Step: Branch initiated on non-integer asset index variable x₃.'},
   {id:1, x:240, y:160, parent:0,    label:'x₃ = 1', bound:118.0, type:'active',   title:'Node 1: Left Cost Bound Matrix x₃=1', body:'Continuous Relaxation Solutions:\nx₂=1.0, x₁=1.0, x₃=1.0, x₅=1.0, x₄=0.0\nTotal Capital: $15.0M\nBound Evaluation: 118.00\nExecution Step: Configuration yields perfect integers. Checking alternative subtrees.'},
   {id:2, x:560, y:160, parent:0,    label:'x₃ = 0', bound:112.0, type:'active',   title:'Node 2: Right Cost Bound Matrix x₃=0', body:'Continuous Relaxation Solutions:\nx₂=1.0, x₁=1.0, x₅=1.0, x₄=1.0, x₃=0.0\nTotal Capital: $14.0M\nBound Evaluation: 112.00\nExecution Step: Lower bound discovered. Pruning processes initialized.'},
   {id:3, x:140, y:270, parent:1,    label:'x₄ = 1', bound:null, type:'fathomed', title:'Node 3: Resource Constraint Deficit', body:'Evaluated Cost Allocation Constraints:\nx₃=1.0, x₄=1.0\nRequired Budget: $4M + $3M = $7M (Prior to completing alternative matrices)\nTotal required capital allocations exceed the $15M corporate funding cap.\nResult: Fathomed via financial unfeasibility.'},
@@ -256,15 +265,6 @@ const ENGINE_NODES_DATA_REGISTRY = [
 let engineExecutionTimelinePointer = 0;
 let systemPlaybackIntervalThread = null;
 let systemGlobalIncumbentMetricsValue = 118.0;
-
-function toggleEvidenceImageState() {
-  const imageWrapperElement = document.getElementById('evidenceImageWrapper');
-  if (imageWrapperElement.style.display === 'block') {
-    imageWrapperElement.style.display = 'none';
-  } else {
-    imageWrapperElement.style.display = 'block';
-  }
-}
 
 function resetEngineSystemState() {
   clearInterval(systemPlaybackIntervalThread);
@@ -442,30 +442,31 @@ function renderActiveStateTreeVectorGraphStructure() {
       individualGroupNodeContainerG.appendChild(nodeTextLabelBoundElement);
     }
 
-    individualGroupNodeContainerG.addEventListener('click', (clickEventObject) => {
-      clickEventObject.stopPropagation();
-      openModalOverlaySpecificationInsight(nodeItem);
+    individualGroupNodeContainerG.addEventListener('click', () => {
+      openOverlayModal(nodeItem);
     });
+    
     nodeContainerLayerG.appendChild(individualGroupNodeContainerG);
   });
 }
 
-function openModalOverlaySpecificationInsight(nodeInstance) {
-  document.getElementById('modalNodeTitle').textContent = `${nodeInstance.title}`;
-  document.getElementById('modalNodeBody').textContent = nodeInstance.body;
-  setModalVisibilityState(true);
+function openOverlayModal(nodeItem) {
+  const modalMask = document.getElementById('modalMask');
+  document.getElementById('modalNodeTitle').textContent = nodeItem.title;
+  document.getElementById('modalNodeBody').textContent = nodeItem.body;
+  modalMask.classList.add('show');
 }
-function closeOverlayModal(clickEventObject) {
-  if(clickEventObject.target.id === 'modalMask') setModalVisibilityState(false);
-}
-function setModalVisibilityState(displayBooleanStateValue) {
-  const targetModalMaskSelectorNode = document.getElementById('modalMask');
-  if(displayBooleanStateValue) {
-    targetModalMaskSelectorNode.classList.add('show');
-  } else {
-    targetModalMaskSelectorNode.classList.remove('show');
+
+function closeOverlayModal(event) {
+  const modalMask = document.getElementById('modalMask');
+  if (event.target === modalMask) {
+    modalMask.classList.remove('show');
   }
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  resetEngineSystemState();
+});
 </script>
 
 </body>
